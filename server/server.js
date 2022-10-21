@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
-const ReceiptRoute = require('./routes/receipt')
+//const ReceiptRoute = require('./routes/receipt')
 const AuthRoute = require('./routes/auth')
 
 // connect to mondodb 
@@ -34,5 +34,5 @@ app.listen(PORT, ()=> {
     console.log(`Server is running on port ${PORT}`)
 })
 
-app.use('/api/receipt', ReceiptRoute)
+//app.use('/api/receipt', ReceiptRoute)
 app.use('/api', AuthRoute)
