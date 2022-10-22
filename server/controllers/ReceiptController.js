@@ -1,36 +1,39 @@
 const Receipt = require('../models/Receipt')
 
-/*
-// Show list of Receipts
-const index = (req,res,next) => {
-    Receipt.find()
-    .then(response => {
+const mongoose = require('mongoose')
+
+// can be /:  or json ?
+// Show list of Receipts - selected user 
+const show = (req,res,next) => {
+    
+    try{
+        const ObjectId = mongoose.Types.ObjectId(req.params.id)
+    } catch(error){
         res.json({
-            response
+            message: 'Wrong user id'
         })
+    }
+    
+    Receipt.find({userId: ObjectId})
+    .then(response => {
+        if(response)
+        {
+            res.json({
+                response
+            })
+        }else {
+            res.json({
+                message: 'User does not have any save receipts'
+            })
+        }
     })
     .catch(error => {
         res.json({
-            message: 'An error occured'
+            message: 'An error occured',
+            userId: req.params.id
         })
     })
 }
-
-const show = (req,res,next) => {
-    let receiptId = req.body.receiptId
-    Receipt.findById(receiptId)
-    .then(response => {
-        res.json({
-            response
-        })
-    })
-    .catch(error=>{
-        res.json({
-            message: 'An error occured'
-        })
-    })
-}
-*/
 
 const store = (req,res,next) => {
     let receipt = new Receipt({
@@ -73,24 +76,24 @@ const update = (req,res,next) => {
         })
     })
 }
+*/
 
 const destroy = (req,res,next) => {
-    let receiptId = req.body.receiptId
+    let receiptId = req.params.receiptId
 
     Receipt.findByIdAndRemove(receiptId)
     .then(()=>{
-        req.json({
+        res.json({
             message: 'Receipt deleted'
         })
     })
     .catch(error => {
-        req.json({
-            message: 'An error occured'
+        res.json({
+            message: 'Receipt id does not exist'
         })
     })
 }
-*/
+
 module.exports = {
-    store
-    //index, show, store, update, destroy
+    store, show, destroy
 }

@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 
 //const ReceiptRoute = require('./routes/receipt')
 const AuthRoute = require('./routes/auth')
+const ReceiptRoute = require('./routes/receipt')
 
 // connect to mondodb 
 mongoose.connect('mongodb://localhost:27017/testdb', {useNewUrlParser: true, useUnifiedTopology: true})
@@ -34,5 +35,5 @@ app.listen(PORT, ()=> {
     console.log(`Server is running on port ${PORT}`)
 })
 
-//app.use('/api/receipt', ReceiptRoute)
+app.use('/api/receipt', ReceiptRoute)
 app.use('/api', AuthRoute)

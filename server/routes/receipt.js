@@ -5,9 +5,9 @@ const ReceiptController = require('../controllers/ReceiptController')
 const authenticate = require('../middleware/authenticate')
 
 //router.get('/', ReceiptController.index)
-//router.post('/show', ReceiptController.show)
+router.post('/show/:id', authenticate, ReceiptController.show)
 router.post('/store', authenticate, ReceiptController.store)
 //router.post('/update', ReceiptController.update)
-//router.post('/delete', ReceiptController.destroy)
+router.post('/delete/:receiptId', authenticate, ReceiptController.destroy)
 
 module.exports = router
