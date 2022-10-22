@@ -5,16 +5,16 @@ const mongoose = require('mongoose')
 // can be /:  or json ?
 // Show list of Receipts - selected user 
 const show = (req,res,next) => {
-    
+    var ObjectId;
     try{
-        const ObjectId = mongoose.Types.ObjectId(req.params.id)
+         ObjectId = mongoose.Types.ObjectId(req.params.id)
     } catch(error){
         res.json({
             message: 'Wrong user id'
         })
     }
-    
-    Receipt.find({userId: ObjectId})
+    //[{"__v": 0}, {"createdAt": 0}, {"updatedAt": 0}]
+    Receipt.find({userId: ObjectId}, { "__v": 0, "createdAt": 0, "updatedAt": 0})
     .then(response => {
         if(response)
         {
@@ -36,8 +36,18 @@ const show = (req,res,next) => {
 }
 
 const store = (req,res,next) => {
+
+    var ObjectId
+    try{
+        ObjectId = mongoose.Types.ObjectId(req.params.id)
+    } catch(error){
+        res.json({
+            message: 'Wrong user id'
+        })
+    }
+    
     let receipt = new Receipt({
-        userId: req.body.userId,
+        userId: ObjectId,
         date: req.body.date,
         shop: req.body.shop,
         price: req.body.price,
