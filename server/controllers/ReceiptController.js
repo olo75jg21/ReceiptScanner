@@ -104,6 +104,26 @@ const destroy = (req,res,next) => {
     })
 }
 
+//doesn't work 
+
+const destroyItem = (req,res,next) => {
+    const ObjectId = mongoose.Types.ObjectId(req.param.itemId)
+    const obId = mongoose.Types.ObjectId("63546eb7d27b77b34ede4b20")
+    Receipt.updateOne( {_id: obId}, {$pull: { receiptItems: { _id: ObjectId } } } )
+    .then(()=>{
+        res.json({
+            message: 'Item removed from receipt',
+            id: itemId
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'Item id does not exist',
+            id: req.params.itemId
+        })
+    })
+}
+
 module.exports = {
-    store, show, destroy
+    store, show, destroy, destroyItem
 }
