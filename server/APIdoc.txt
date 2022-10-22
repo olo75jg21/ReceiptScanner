@@ -1,0 +1,111 @@
+/api/register
+
+{
+    "username": "us",
+    "email": "email@.pl",
+    "password": "pass" 
+}
+
+Możliwe odpowiedzi:
+message: "User Added Successfully"
+message: "Username and email already exists"
+message: "Username already exists"
+message: "Email already exists"
+message: 'An error occured'
+
+/api/login
+
+-w username może być email albo nazwa użytkownika 
+
+{
+    "username": "email@.pl",
+    "password": "pass" 
+}
+
+Możliwe odpowiedzi:
+message: 'Login succesful'
+message: 'Password is incorrect'
+message: 'No user found'
+
+oraz 
+token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXMiLCJpYXQiOjE2NjY0NzE3NjB9.mdOYwIoVNznQgZ91Oz1Vux16ycAYVn47Ed9JysiBKnw",
+id: "635456173b976edf19944715"
+
+-token potrzebny do autoryzacji, musi znajdować się w Headerze 
+-id użytkownika używane, aby dostać paragony dla danego użytkownika
+
+
+/api/receipt/store/{idUzytkownika}
+
+{
+    "shop": "zabka",
+    "price": 120,
+    "receiptItems": [
+        {
+            "name": "snickers",
+            "unit": ".szt",
+            "amount": 1,
+            "priceInvidual": 2,
+            "category": "slodycze"
+        }
+    ]
+}
+
+Możliwe odpowiedzi:
+message: 'Wrong user id'
+message: "Receipt added"
+message: 'An error occured'
+
+/api/receipt/show/{idUzytkownika}
+
+{
+    "response": [
+        {
+            "_id": "63543e238f4924aa537bab5c",
+            "userId": "635431494b9265ce3f320620",
+            "shop": "zabka",
+            "price": 120,
+            "receiptItems": [
+                {
+                    "name": "snickers",
+                    "unit": ".szt",
+                    "amount": 1,
+                    "priceInvidual": 2,
+                    "category": "slodycze",
+                    "_id": "63543e238f4924aa537bab5d"
+                }
+            ],
+            "data": "2022-10-22T19:01:55.451Z",
+        },
+        {
+            "_id": "63545983d81af0f9f1f964e1",
+            "userId": "635431494b9265ce3f320620",
+            "shop": "zabka",
+            "price": 120,
+            "receiptItems": [
+                {
+                    "name": "snickers",
+                    "unit": ".szt",
+                    "amount": 1,
+                    "priceInvidual": 2,
+                    "category": "slodycze",
+                    "_id": "63545983d81af0f9f1f964e2"
+                }
+            ],
+            "data": "2022-10-22T20:58:43.329Z",
+        }
+    ]
+}
+
+ukryte pola "__v", "createdAt" oraz "updatedAt"
+
+
+/api/receipt/delete/{idParagonu}
+- zakładam, że id paragonu będzie przechowywane, więc przez nie będzie można usuwać
+
+message: 'Receipt deleted'
+message: 'Receipt id does not exist'
+
+
+
+
