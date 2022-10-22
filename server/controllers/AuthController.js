@@ -4,31 +4,51 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 
 const register = (req,res,next) => {
-    bcrypt.hash(req.body.password,10, function(err, hashedPass){
-        if(err){
-            res.json({
-                error: err
-            })
-        }
 
-        let user = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPass
-        })
-    
-        user.save()
-        .then(user=> {
-            res.json({
-                message: 'User Added Successfully'
-            })
-        })
-        .catch(error => {
-            res.json({
-                message: 'An error occured'
-            })
-        })
-    })
+    User.findOne({$or: [{username: req.body.username}, {email: req.body.email}] })
+    .then(user => {
+            if(user) {
+                if( user.email === req.body.email && user.username === req.body.username) {
+                    res.json({
+                        message: "Username and email already exists"
+                    })
+                } else if(user.username === req.body.username) {
+                    res.json({
+                        message: "Username already exists"
+                    })
+                } else {
+                    res.json({
+                        message: "Email already exists"
+                    })
+                }
+            } else {
+                bcrypt.hash(req.body.password,10, function(err, hashedPass){
+                    if(err){
+                        res.json({
+                            error: err
+                        })
+                    }
+            
+                    let user = new User({
+                        username: req.body.username,
+                        email: req.body.email,
+                        password: hashedPass
+                    })
+                
+                    user.save()
+                    .then(user=> {
+                        res.json({
+                            message: 'User Added Successfully'
+                        })
+                    })
+                    .catch(error => {
+                        res.json({
+                            message: 'An error occured'
+                        })
+                    })
+                })
+            }  
+        })   
 }
 
 const login = (req,res,next) => {
@@ -46,7 +66,7 @@ const login = (req,res,next) => {
                 }
                 if(result){
                     // token doesn't expire 
-                    let token = jwt.sign({name: user.username}, 'secretValue')
+                    let token = jwt.sign({name: user.username}, 'AzQ,PI)0(')
                     res.json({
                         message: 'Login succesful',
                         token: token,
@@ -55,7 +75,7 @@ const login = (req,res,next) => {
                 }
                 else{
                     res.json({
-                        message: 'Password doesn not match'
+                        message: 'Password is incorrect'
                     })
                 }
             })
