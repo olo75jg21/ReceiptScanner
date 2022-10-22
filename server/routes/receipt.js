@@ -14,6 +14,6 @@ router.post('/delete/item/:itemId', ReceiptController.destroyItem)
 router.post('/show/:id', ReceiptController.show)
 router.post('/store/:id', ReceiptController.store)
 router.post('/delete/:receiptId', ReceiptController.destroy)
-router.post('/delete/item/:itemId', ReceiptController.destroyItem)
+router.post('/delete/:receiptId/item/:itemId', ReceiptController.destroyItem)
 
 module.exports = router

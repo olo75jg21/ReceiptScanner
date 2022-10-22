@@ -47,6 +47,20 @@ id: "635456173b976edf19944715"
             "amount": 1,
             "priceInvidual": 2,
             "category": "slodycze"
+        },
+        {
+            "name": "lizak",
+            "unit": ".szt",
+            "amount": 1,
+            "priceInvidual": 1,
+            "category": "slodycze"
+        },
+        {
+            "name": "prince",
+            "unit": ".szt",
+            "amount": 1,
+            "priceInvidual": 1.5,
+            "category": "slodycze"
         }
     ]
 }
@@ -105,6 +119,12 @@ ukryte pola "__v", "createdAt" oraz "updatedAt"
 
 message: 'Receipt deleted'
 message: 'Receipt id does not exist'
+
+
+'/delete/{idParagonu}/item/{idPrzedmiotu}'
+
+message: 'Item removed from receipt',
+message: 'Receipt id or Item id does not exist',
 
 
 
