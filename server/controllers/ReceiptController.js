@@ -135,30 +135,6 @@ const updateItem = (req,res,next) => {
             message: 'Receipt id or Item id does not exist',
         })
     })
-
-    /*
-    Receipt.find( {_id: req.params.receiptId}).where('receiptItems').equals( {_id: req.params.itemId} ).updateOne(
-        {
-            $set: {
-                name: req.body.name, 
-                unit: req.body.unit,
-                amount: req.body.amount, 
-                priceInvidual: req.body.priceInvidual, 
-                category: req.body.category 
-            }
-        }
-    ) 
-    .then(()=>{
-        res.json({
-            message: 'Item was updated',
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: 'Receipt id or item id does not exist',
-        })
-    })
-    */
 }
 
 const destroyItem = (req,res,next) => {
