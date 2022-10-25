@@ -2,12 +2,11 @@ const Receipt = require('../models/Receipt')
 
 const mongoose = require('mongoose')
 
-// can be /:  or json ?
 // Show list of Receipts - selected user 
 const show = (req,res,next) => {
     var ObjectId;
     try{
-         ObjectId = mongoose.Types.ObjectId(req.params.id)
+         ObjectId = mongoose.Types.ObjectId(req.params.userId)
     } catch(error){
         res.json({
             message: 'Wrong user id'
@@ -39,7 +38,7 @@ const store = (req,res,next) => {
 
     var ObjectId
     try{
-        ObjectId = mongoose.Types.ObjectId(req.params.id)
+        ObjectId = mongoose.Types.ObjectId(req.params.userId)
     } catch(error){
         res.json({
             message: 'Wrong user id'
@@ -66,27 +65,23 @@ const store = (req,res,next) => {
     })
 }
 
-/*
+
 const update = (req,res,next) => {
-    let receiptId = req.body.receiptId
+    let receiptId = req.params.receiptId
 
-    let updatedData = {
-        name: req.body.name
-    }
-
-    Receipt.findByIdAndUpdate(receiptId, {$set: updatedData})
+    Receipt.findByIdAndUpdate(receiptId, {$set: { data: req.body.data, shop: req.body.shop, price: req.body.price } })
     .then(()=>{
         res.json({
-            message: 'Receipt updated'
+            message: 'Receipt informations updated'
         })
     })
     .catch(error=>{
         res.json({
-            message: 'An error occured'
+            message: 'Receipt Id does not exist'
         })
     })
 }
-*/
+
 
 const destroy = (req,res,next) => {
     let receiptId = req.params.receiptId
@@ -104,6 +99,68 @@ const destroy = (req,res,next) => {
     })
 }
 
+const storeItem = (req,res,next) => {
+    Receipt.updateOne( {_id: req.params.receiptId}, { $push: { receiptItems: { name: req.body.name, unit: req.body.unit,
+        amount: req.body.amount, priceInvidual: req.body.priceInvidual, category: req.body.category } } } ) 
+    .then(()=>{
+        res.json({
+            message: 'Item was added to receipt',
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'Receipt id does not exist',
+        })
+    })
+}
+
+const updateItem = (req,res,next) => {
+
+    Receipt.updateOne( {_id: req.params.receiptId, "receiptItems._id": req.params.itemId }, {$set: 
+        {
+            "receiptItems.$.name": req.body.name, 
+            "receiptItems.$.unit": req.body.unit,
+            "receiptItems.$.amount": req.body.amount, 
+            "receiptItems.$.priceInvidual": req.body.priceInvidual, 
+            "receiptItems.$.category": req.body.category 
+        }
+    })
+    .then(()=>{
+        res.json({
+            message: 'Item updated',
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'Receipt id or Item id does not exist',
+        })
+    })
+
+    /*
+    Receipt.find( {_id: req.params.receiptId}).where('receiptItems').equals( {_id: req.params.itemId} ).updateOne(
+        {
+            $set: {
+                name: req.body.name, 
+                unit: req.body.unit,
+                amount: req.body.amount, 
+                priceInvidual: req.body.priceInvidual, 
+                category: req.body.category 
+            }
+        }
+    ) 
+    .then(()=>{
+        res.json({
+            message: 'Item was updated',
+        })
+    })
+    .catch(error => {
+        res.json({
+            message: 'Receipt id or item id does not exist',
+        })
+    })
+    */
+}
+
 const destroyItem = (req,res,next) => {
     Receipt.updateOne( {_id: req.params.receiptId}, {$pull: { receiptItems: { _id: req.params.itemId } } } )
     .then(()=>{
@@ -119,5 +176,5 @@ const destroyItem = (req,res,next) => {
 }
 
 module.exports = {
-    store, show, destroy, destroyItem
+    store, show, destroy, update, destroyItem, storeItem, updateItem
 }

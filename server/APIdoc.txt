@@ -35,8 +35,8 @@ id: "635456173b976edf19944715"
 -id użytkownika używane, aby dostać paragony dla danego użytkownika
 
 
+Dodanie paragonu powiązanego z konkretnym użytkownikiem
 /api/receipt/store/{idUzytkownika}
-
 {
     "shop": "zabka",
     "price": 120,
@@ -70,6 +70,8 @@ message: 'Wrong user id'
 message: "Receipt added"
 message: 'An error occured'
 
+
+Wyświetlenie wszystkich paragonów danego użytkownika
 /api/receipt/show/{idUzytkownika}
 
 {
@@ -114,6 +116,7 @@ message: 'An error occured'
 ukryte pola "__v", "createdAt" oraz "updatedAt"
 
 
+Usuwanie paragonu:
 /api/receipt/delete/{idParagonu}
 - zakładam, że id paragonu będzie przechowywane, więc przez nie będzie można usuwać
 
@@ -121,11 +124,32 @@ message: 'Receipt deleted'
 message: 'Receipt id does not exist'
 
 
-'/delete/{idParagonu}/item/{idPrzedmiotu}'
+Usuwanie z paragonu konkretnego przedmiotu:
+api/receipt/delete/{idParagonu}/item/{idPrzedmiotu}
 
 message: 'Item removed from receipt',
-message: 'Receipt id or Item id does not exist',
+message: 'Receipt id or Item id does not exist'
 
+
+Dodanie do paragonu nowego przedmiotu:
+api/receipt/store/item/{idParagonu}
+
+message: 'Item was added to receipt',
+message: 'Receipt id does not exist'
+
+
+Aktualizacja danych w paragonie
+api/receipt/update/{idParagonu}
+
+message: 'Receipt informations updated'
+message: 'Receipt id does not exist'
+
+
+Akutalizacja danych przedmiotu
+api/receipt/update/{idParagonu}/item/{idPrzedmiotu}
+
+message: 'Item updated'
+message: 'Receipt id or item id does not exist'
 
 
 
