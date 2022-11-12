@@ -4,10 +4,11 @@ import '/core/constant/app_color.dart';
 import '/core/constant/app_text.dart';
 import '/product/widget/custom_elevated_button.dart';
 import '/product/widget/custom_textfield.dart';
-import '/view/register_view.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+import 'login_view.dart';
+
+class RegisterView extends StatelessWidget {
+  const RegisterView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +31,26 @@ class LoginView extends StatelessWidget {
             CustomTextField(
               height: context.height * 0.07,
               width: context.width * 0.8,
+              hinttext: AppText.firstName,
+              prefixIcon: const Icon(
+                Icons.person,
+                color: AppColors.loginColor,
+              ),
+            ),
+            context.emptySizedHeightBoxLow,
+            CustomTextField(
+              height: context.height * 0.07,
+              width: context.width * 0.8,
+              hinttext: AppText.lastName,
+              prefixIcon: const Icon(
+                Icons.person,
+                color: AppColors.loginColor,
+              ),
+            ),
+            context.emptySizedHeightBoxLow,
+            CustomTextField(
+              height: context.height * 0.07,
+              width: context.width * 0.8,
               hinttext: AppText.email,
               prefixIcon: const Icon(
                 Icons.email,
@@ -47,23 +68,29 @@ class LoginView extends StatelessWidget {
               ),
               suffixIcon: const Icon(Icons.remove_red_eye),
             ),
-            midText(context),
             context.emptySizedHeightBoxLow,
+            CustomTextField(
+              height: context.height * 0.07,
+              width: context.width * 0.8,
+              hinttext: AppText.confirm,
+              prefixIcon: const Icon(
+                Icons.lock,
+                color: AppColors.loginColor,
+              ),
+              suffixIcon: const Icon(Icons.remove_red_eye),
+            ),
+            context.emptySizedHeightBoxLow3x,
             CustomElevatedButton(
               borderRadius: 20,
               color: AppColors.loginColor,
               height: context.height * 0.07,
               width: context.width * 0.6,
               child: Text(
-                AppText.login.toUpperCase(),
+                AppText.signUp.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
             ),
             context.emptySizedHeightBoxLow3x,
-            const Text(AppText.or),
-            context.emptySizedHeightBoxLow3x,
-            const Text(AppText.loginwith),
-            context.emptySizedHeightBoxLow,
             bottomText(context),
           ],
         ),
@@ -73,34 +100,8 @@ class LoginView extends StatelessWidget {
 
   Text topText(BuildContext context) {
     return Text(
-      AppText.login.toUpperCase(),
+      AppText.signUp.toUpperCase(),
       style: context.textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
-    );
-  }
-
-  SizedBox midText(BuildContext context) {
-    return SizedBox(
-      height: context.height * 0.1,
-      width: context.width * 0.85,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Row(
-            children: [
-              Switch(
-                value: true,
-                onChanged: (value) {},
-                activeColor: Colors.white,
-                activeTrackColor: AppColors.loginColor,
-              ),
-              const Text(AppText.rememberMe),
-            ],
-          ),
-          const Text(
-            AppText.already,
-          ),
-        ],
-      ),
     );
   }
 
@@ -109,21 +110,21 @@ class LoginView extends StatelessWidget {
       width: context.width * 0.7,
       height: context.height * 0.08,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Text(
-            AppText.account,
+            AppText.already,
           ),
           TextButton(
             child: const Text(
-              AppText.registernow,
+              AppText.login,
               style: TextStyle(color: AppColors.loginColor),
             ),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RegisterView()),
+                MaterialPageRoute(builder: (context) => const LoginView()),
               );
             },
           )
