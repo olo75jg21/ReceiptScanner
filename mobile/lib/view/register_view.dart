@@ -19,9 +19,14 @@ class RegisterView extends StatelessWidget {
   }
 
   SizedBox _body(BuildContext context) {
-    Map<String, dynamic> _credentials = [
-      ''
-    ];
+    Map<String, dynamic> _credentials = {
+      'first_name': '',
+      'last_name': '',
+      'email': '',
+      'password': '',
+      'confirm_password': '',
+    };
+
     return SizedBox(
       height: context.height * 1,
       width: context.width * 1,
@@ -40,7 +45,7 @@ class RegisterView extends StatelessWidget {
                 Icons.person,
                 color: AppColors.loginColor,
               ),
-              onChanged: (newText) { _credentials['first_name'] = newText },
+              onChanged: (newText) { _credentials['first_name'] = newText; },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -51,6 +56,7 @@ class RegisterView extends StatelessWidget {
                 Icons.person,
                 color: AppColors.loginColor,
               ),
+              onChanged: (newText) { _credentials['last_name'] = newText; },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -61,6 +67,7 @@ class RegisterView extends StatelessWidget {
                 Icons.email,
                 color: AppColors.loginColor,
               ),
+              onChanged: (newText) { _credentials['email'] = newText; },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -72,6 +79,7 @@ class RegisterView extends StatelessWidget {
                 color: AppColors.loginColor,
               ),
               suffixIcon: const Icon(Icons.remove_red_eye),
+              onChanged: (newText) { _credentials['password'] = newText; },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -83,6 +91,7 @@ class RegisterView extends StatelessWidget {
                 color: AppColors.loginColor,
               ),
               suffixIcon: const Icon(Icons.remove_red_eye),
+              onChanged: (newText) { _credentials['confirm_password'] = newText; },
             ),
             context.emptySizedHeightBoxLow3x,
             CustomElevatedButton(

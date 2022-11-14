@@ -54,6 +54,7 @@ class LoginView extends StatelessWidget {
               color: AppColors.loginColor,
               height: context.height * 0.07,
               width: context.width * 0.6,
+              onPressed: null,
               child: Text(
                 AppText.login.toUpperCase(),
                 style: const TextStyle(color: Colors.white),

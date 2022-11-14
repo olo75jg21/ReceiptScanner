@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? hinttext;
+  final Function? onChanged;
 
   const CustomTextField({
     Key? key,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.child,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -48,6 +50,7 @@ class CustomTextField extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.0),
             ),
           ),
+          onChanged: (value) => onChanged?.call(value),
         ),
       ),
     );
