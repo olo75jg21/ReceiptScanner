@@ -5,6 +5,7 @@ import '/core/constant/app_text.dart';
 import '/product/widget/custom_elevated_button.dart';
 import '/product/widget/custom_textfield.dart';
 
+import 'package:http/http.dart' as http;
 import 'login_view.dart';
 
 class RegisterView extends StatelessWidget {
@@ -18,6 +19,9 @@ class RegisterView extends StatelessWidget {
   }
 
   SizedBox _body(BuildContext context) {
+    Map<String, dynamic> _credentials = [
+      ''
+    ];
     return SizedBox(
       height: context.height * 1,
       width: context.width * 1,
@@ -36,6 +40,7 @@ class RegisterView extends StatelessWidget {
                 Icons.person,
                 color: AppColors.loginColor,
               ),
+              onChanged: (newText) { _credentials['first_name'] = newText },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -89,6 +94,7 @@ class RegisterView extends StatelessWidget {
                 AppText.signUp.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
+              onPressed: () => ,
             ),
             context.emptySizedHeightBoxLow3x,
             bottomText(context),
