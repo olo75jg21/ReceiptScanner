@@ -10,7 +10,7 @@ class User {
 
   static Future<http.Response> registerUser(Map<String, dynamic> credentials) {
     return http.post(
-      Uri.parse('localhost:3000/api/register'),
+      Uri.parse('http://localhost:3000/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

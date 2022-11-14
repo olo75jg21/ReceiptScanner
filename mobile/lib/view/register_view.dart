@@ -5,11 +5,21 @@ import '/core/constant/app_text.dart';
 import '/product/widget/custom_elevated_button.dart';
 import '/product/widget/custom_textfield.dart';
 
+import '/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'login_view.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({Key? key}) : super(key: key);
+
+  static void submitForm(data) {
+    if (data['confirm_password'] == data['password']) {
+      print('Podane hasla sa takie same.');
+      User.registerUser(data);
+    } else {
+      print('Podane hasla sie takie same.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +55,9 @@ class RegisterView extends StatelessWidget {
                 Icons.person,
                 color: AppColors.loginColor,
               ),
-              onChanged: (newText) { _credentials['first_name'] = newText; },
+              onChanged: (newText) {
+                _credentials['first_name'] = newText;
+              },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -56,7 +68,9 @@ class RegisterView extends StatelessWidget {
                 Icons.person,
                 color: AppColors.loginColor,
               ),
-              onChanged: (newText) { _credentials['last_name'] = newText; },
+              onChanged: (newText) {
+                _credentials['last_name'] = newText;
+              },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -67,7 +81,9 @@ class RegisterView extends StatelessWidget {
                 Icons.email,
                 color: AppColors.loginColor,
               ),
-              onChanged: (newText) { _credentials['email'] = newText; },
+              onChanged: (newText) {
+                _credentials['email'] = newText;
+              },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -79,7 +95,9 @@ class RegisterView extends StatelessWidget {
                 color: AppColors.loginColor,
               ),
               suffixIcon: const Icon(Icons.remove_red_eye),
-              onChanged: (newText) { _credentials['password'] = newText; },
+              onChanged: (newText) {
+                _credentials['password'] = newText;
+              },
             ),
             context.emptySizedHeightBoxLow,
             CustomTextField(
@@ -91,7 +109,9 @@ class RegisterView extends StatelessWidget {
                 color: AppColors.loginColor,
               ),
               suffixIcon: const Icon(Icons.remove_red_eye),
-              onChanged: (newText) { _credentials['confirm_password'] = newText; },
+              onChanged: (newText) {
+                _credentials['confirm_password'] = newText;
+              },
             ),
             context.emptySizedHeightBoxLow3x,
             CustomElevatedButton(
@@ -103,7 +123,7 @@ class RegisterView extends StatelessWidget {
                 AppText.signUp.toUpperCase(),
                 style: const TextStyle(color: Colors.white),
               ),
-              onPressed: () => ,
+              onPressed: () => submitForm(_credentials),
             ),
             context.emptySizedHeightBoxLow3x,
             bottomText(context),
