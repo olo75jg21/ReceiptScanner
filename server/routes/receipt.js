@@ -5,16 +5,15 @@ const ReceiptController = require('../controllers/ReceiptController')
 const authenticate = require('../middleware/authenticate')
 
 
-router.get('/show/:userId', authenticate,  ReceiptController.show)
+router.get('/:userId', authenticate,  ReceiptController.show)
 
-router.post('/store/:userId', authenticate, ReceiptController.store)
-router.post('/store/item/:receiptId', authenticate, ReceiptController.updateItem)
+router.post('/:userId', authenticate, ReceiptController.store)
+router.post('/item/:receiptId', authenticate, ReceiptController.storeItem)
 
-router.post('/update/:receiptId', authenticate, ReceiptController.update)
-router.post('/update/:receiptId/item/:itemId', authenticate, ReceiptController.updateItem)
+router.patch('/:receiptId', authenticate, ReceiptController.update)
+router.patch('/:receiptId/item/:itemId', authenticate, ReceiptController.updateItem)
 
-router.get('/delete/:receiptId', authenticate, ReceiptController.destroy)
-router.get('/delete/:receiptId/item/:itemId', authenticate, ReceiptController.destroyItem)
-
+router.delete('/:receiptId', authenticate, ReceiptController.destroy)
+router.delete('/:receiptId/item/:itemId', authenticate, ReceiptController.destroyItem)
 
 module.exports = router

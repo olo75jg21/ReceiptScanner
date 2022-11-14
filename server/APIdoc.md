@@ -1,42 +1,47 @@
-/api/register
+# API Documentation
 
+## POST /register
+
+```JSON
 {
     "username": "us",
     "email": "email@.pl",
     "password": "pass" 
 }
+```
 
-Możliwe odpowiedzi:
-message: "User Added Successfully"
-message: "Username and email already exists"
-message: "Username already exists"
-message: "Email already exists"
-message: 'An error occured'
+### Możliwe odpowiedzi
+* "User Added Successfully"
+* "Username and email already exists"
+* "Username already exists"
+* "Email already exists"
+* 'An error occured'
 
-/api/login
+## POST /login
 
--w username może być email albo nazwa użytkownika 
-
+```JSON
 {
     "username": "email@.pl",
     "password": "pass" 
 }
+```
 
-Możliwe odpowiedzi:
-message: 'Login succesful'
-message: 'Password is incorrect'
-message: 'No user found'
+### Możliwe odpowiedzi
+* 'Login succesful'
+* 'Password is incorrect'
+* 'No user found'
 
-oraz 
-token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXMiLCJpYXQiOjE2NjY0NzE3NjB9.mdOYwIoVNznQgZ91Oz1Vux16ycAYVn47Ed9JysiBKnw",
-id: "635456173b976edf19944715"
+### Informacje, które należy przechować w aplikacji do dalszej pracy
+* token
+* id
 
--token potrzebny do autoryzacji, musi znajdować się w Headerze 
--id użytkownika używane, aby dostać paragony dla danego użytkownika
+Token potrzebny będzie do autoryzacji, musi znajdować się w Headerze 
 
+Id użytkownika jest używane, aby dostać paragony
 
-Dodanie paragonu powiązanego z konkretnym użytkownikiem
-/api/receipt/store/{idUzytkownika}
+# POST /receipt/{idUzytkownika}
+
+```JSON
 {
     "shop": "zabka",
     "price": 120,
@@ -64,16 +69,18 @@ Dodanie paragonu powiązanego z konkretnym użytkownikiem
         }
     ]
 }
+```
 
-Możliwe odpowiedzi:
-message: 'Wrong user id'
-message: "Receipt added"
-message: 'An error occured'
-
+### Możliwe odpowiedzi 
+* 'Wrong user id'
+* "Receipt added"
+* 'An error occured'
 
 Wyświetlenie wszystkich paragonów danego użytkownika
-/api/receipt/show/{idUzytkownika}
 
+# GET /receipt/{idUzytkownika}
+
+```JSON
 {
     "response": [
         {
@@ -112,44 +119,67 @@ Wyświetlenie wszystkich paragonów danego użytkownika
         }
     ]
 }
+```
 
 ukryte pola "__v", "createdAt" oraz "updatedAt"
 
+# DELETE /receipt/{idParagonu}
 
-Usuwanie paragonu:
-/api/receipt/delete/{idParagonu}
-- zakładam, że id paragonu będzie przechowywane, więc przez nie będzie można usuwać
+### Możliwe odpowiedzi 
+* 'Receipt deleted'
+* 'Receipt id does not exist'
 
-message: 'Receipt deleted'
-message: 'Receipt id does not exist'
+# DELETE /receipt/{idParagonu}/item/{idPrzedmiotu}
 
+### Możliwe odpowiedzi 
+* 'Item removed from receipt',
+* 'Receipt id or Item id does not exist'
 
-Usuwanie z paragonu konkretnego przedmiotu:
-api/receipt/delete/{idParagonu}/item/{idPrzedmiotu}
+# POST /receipt/item/{idParagonu}
 
-message: 'Item removed from receipt',
-message: 'Receipt id or Item id does not exist'
+```JSON
+{
+    "name": "batonik",
+    "unit": ".szt",
+    "amount": 5,
+    "priceInvidual": 2.3,
+    "category": "slodycze"
+}
+```
 
+### Możliwe odpowiedzi 
+* 'Item was added to receipt',
+* 'Receipt id does not exist'
 
-Dodanie do paragonu nowego przedmiotu:
-api/receipt/store/item/{idParagonu}
+# PATCH /receipt/{idParagonu}
 
-message: 'Item was added to receipt',
-message: 'Receipt id does not exist'
+```JSON
+{
+   "shop": "zabka",
+   "price": 3.50,
+   "data": "2020-10-03"
+}
+```
 
+### Możliwe odpowiedzi 
+* 'Receipt informations updated'
+* 'Receipt id does not exist'
 
-Aktualizacja danych w paragonie
-api/receipt/update/{idParagonu}
+# PATCH /receipt/{idParagonu}/item/{idPrzedmiotu}
 
-message: 'Receipt informations updated'
-message: 'Receipt id does not exist'
+```JSON
+{
+   "name": "baton",
+   "unit": ".szt",
+   "amount": 3,
+   "priceInvidual": 1.5,
+   "category": "slodycze"
+}
+```
 
-
-Akutalizacja danych przedmiotu
-api/receipt/update/{idParagonu}/item/{idPrzedmiotu}
-
-message: 'Item updated'
-message: 'Receipt id or item id does not exist'
+### Możliwe odpowiedzi 
+* 'Item updated'
+* 'Receipt id or item id does not exist'
 
 
 

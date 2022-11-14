@@ -12,7 +12,7 @@ const show = (req,res,next) => {
             message: 'Wrong user id'
         })
     }
-    //[{"__v": 0}, {"createdAt": 0}, {"updatedAt": 0}]
+    
     Receipt.find({userId: ObjectId}, { "__v": 0, "createdAt": 0, "updatedAt": 0})
     .then(response => {
         if(response)

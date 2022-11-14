@@ -30,6 +30,8 @@ const register = (req,res,next) => {
                     }
             
                     let user = new User({
+                        firstName: req.body.firstName,
+                        secondName: req.body.secondName,
                         username: req.body.username,
                         email: req.body.email,
                         password: hashedPass
@@ -81,7 +83,7 @@ const login = (req,res,next) => {
             })
         }else{
             res.json({
-                message: 'No user found'
+                message: 'Wrong username/email or password'
             })
         }
     })

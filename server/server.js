@@ -35,5 +35,5 @@ app.listen(PORT, ()=> {
     console.log(`Server is running on port ${PORT}`)
 })
 
-app.use('/api/receipt', ReceiptRoute)
-app.use('/api', AuthRoute)
+app.use('/receipt', ReceiptRoute)
+app.use('', AuthRoute)
