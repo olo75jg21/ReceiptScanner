@@ -4,23 +4,22 @@ const mongoose = require('mongoose')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 
-//const ReceiptRoute = require('./routes/receipt')
 const AuthRoute = require('./routes/auth')
 const ReceiptRoute = require('./routes/receipt')
 
-// connect to mondodb 
-mongoose.connect('mongodb://localhost:27017/testdb', {useNewUrlParser: true, useUnifiedTopology: true})
-const db = mongoose.connection
+const url = `mongodb+srv://receiptScanner:otmQO5YqE2OhQsh7@cluster0.w1oqfry.mongodb.net/?retryWrites=true&w=majority`
 
-// handle errors database
-db.on('error',(err) => {
-    console.log(err)
-})
-
-// when connected to database
-db.once('open', () => {
-    console.log('Database Connection Established')
-})
+const connectionParams={
+    useNewUrlParser: true,
+    useUnifiedTopology: true 
+}
+mongoose.connect(url,connectionParams)
+    .then( () => {
+        console.log('Connected to the database ')
+    })
+    .catch( (err) => {
+        console.error(`Error connecting to the database. n${err}`);
+    })
 
 const app = express()
 

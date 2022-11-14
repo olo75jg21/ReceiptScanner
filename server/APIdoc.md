@@ -1,12 +1,14 @@
 # API Documentation
 
 ## POST /register
-
+Rejstracja
 ```JSON
 {
-    "username": "us",
-    "email": "email@.pl",
-    "password": "pass" 
+    "firstName": "admin",
+    "secondName": "admin",
+    "username": "admin",
+    "email": "admin@admin.de",
+    "password": "admin" 
 }
 ```
 
@@ -15,10 +17,10 @@
 * "Username and email already exists"
 * "Username already exists"
 * "Email already exists"
-* 'An error occured'
+* 'An error occured'<br/></br>
 
 ## POST /login
-
+Logowanie 
 ```JSON
 {
     "username": "email@.pl",
@@ -37,10 +39,10 @@
 
 Token potrzebny będzie do autoryzacji, musi znajdować się w Headerze 
 
-Id użytkownika jest używane, aby dostać paragony
+Id użytkownika jest używane, aby dostać paragony<br/><br/>
 
 # POST /receipt/{idUzytkownika}
-
+Dodanie paragonu
 ```JSON
 {
     "shop": "zabka",
@@ -74,12 +76,10 @@ Id użytkownika jest używane, aby dostać paragony
 ### Możliwe odpowiedzi 
 * 'Wrong user id'
 * "Receipt added"
-* 'An error occured'
-
-Wyświetlenie wszystkich paragonów danego użytkownika
+* 'An error occured'<br/><br/>
 
 # GET /receipt/{idUzytkownika}
-
+Pobranie wszystkich paragonów danego użytkownika
 ```JSON
 {
     "response": [
@@ -121,22 +121,23 @@ Wyświetlenie wszystkich paragonów danego użytkownika
 }
 ```
 
-ukryte pola "__v", "createdAt" oraz "updatedAt"
+ukryte pola "__v", "createdAt" oraz "updatedAt"<br/><br/>
 
 # DELETE /receipt/{idParagonu}
-
+ Usuniecie paragonu
 ### Możliwe odpowiedzi 
 * 'Receipt deleted'
-* 'Receipt id does not exist'
+* 'Receipt id does not exist'<br/><br/>
 
 # DELETE /receipt/{idParagonu}/item/{idPrzedmiotu}
+Usuniecie przedmiotu z paragonu
 
 ### Możliwe odpowiedzi 
 * 'Item removed from receipt',
-* 'Receipt id or Item id does not exist'
+* 'Receipt id or Item id does not exist'<br/><br/>
 
 # POST /receipt/item/{idParagonu}
-
+Dodanie przedmiotu do paragonu
 ```JSON
 {
     "name": "batonik",
@@ -149,10 +150,10 @@ ukryte pola "__v", "createdAt" oraz "updatedAt"
 
 ### Możliwe odpowiedzi 
 * 'Item was added to receipt',
-* 'Receipt id does not exist'
+* 'Receipt id does not exist'<br/><br/>
 
 # PATCH /receipt/{idParagonu}
-
+Aktualizacja paragonu
 ```JSON
 {
    "shop": "zabka",
@@ -163,10 +164,10 @@ ukryte pola "__v", "createdAt" oraz "updatedAt"
 
 ### Możliwe odpowiedzi 
 * 'Receipt informations updated'
-* 'Receipt id does not exist'
+* 'Receipt id does not exist'<br/><br/>
 
 # PATCH /receipt/{idParagonu}/item/{idPrzedmiotu}
-
+Aktualizacja przedmiotu w danym paraganie
 ```JSON
 {
    "name": "baton",
