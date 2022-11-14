@@ -2,9 +2,32 @@ const user = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const {check, validationResult} = require('express-validator')
 
 const register = (req,res,next) => {
 
+    
+    //req.body.password.exists().isLength({min:6}), (req,res) => {
+       
+    const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        
+ 
+
+/*
+  body("email").isEmail(),
+  // password must be at least 5 chars long
+  body("password").isLength({ min: 5 }),
+  (req, res) => {
+    console.log("checking")
+    // Finds the validation errors in this request and wraps them in an object with handy functions
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }}
+    */
     User.findOne({$or: [{username: req.body.username}, {email: req.body.email}] })
     .then(user => {
             if(user) {

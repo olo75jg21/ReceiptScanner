@@ -12,6 +12,13 @@ Rejstracja
 }
 ```
 
+### Walidacja danych
+* firstName - długość co najmniej trzy oraz musi składać się z samych liter
+* secondName - długość co najmniej trzy oraz musi składać się z samych liter
+* username - długość co najmniej trzy 
+* email - musi mieć prawidłowy format adresu email np. test@gmail.com
+* password - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
+
 ### Możliwe odpowiedzi
 * "User Added Successfully"
 * "Username and email already exists"
