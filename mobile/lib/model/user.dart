@@ -6,11 +6,20 @@ class User {
   final String email;
   final String password;
 
-  User(this.username, this.email, this.password);
+  const User(
+      {required this.username, required this.email, required this.password});
 
-  static Future<http.Response> registerUser(Map<String, dynamic> credentials) {
-    return http.post(
-      Uri.parse('http://localhost:3000/api/register'),
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      username: json['username'],
+      email: json['email'],
+      password: json['password'],
+    );
+  }
+
+  static Future<User> registerUser(Map<String, dynamic> credentials) async {
+    final response = await http.post(
+      Uri.parse('http://10.3.113.135:3000/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -20,6 +29,14 @@ class User {
         'password': credentials['password']
       }),
     );
+    if (response.statusCode == 200) {
+      return User.fromJson(jsonDecode(response.body));
+    } else {
+      print('response code: response.statusCode');
+      print(response.body);
+
+      throw Exception('Failed to create User.');
+    }
   }
 
   // NOTE: implementing functionality here in the next step!

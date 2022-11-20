@@ -15,7 +15,11 @@ class RegisterView extends StatelessWidget {
   static void submitForm(data) {
     if (data['confirm_password'] == data['password']) {
       print('Podane hasla sa takie same.');
-      User.registerUser(data);
+      try {
+        print(User.registerUser(data));
+      } catch (e) {
+        print('boom');
+      }
     } else {
       print('Podane hasla sie takie same.');
     }
