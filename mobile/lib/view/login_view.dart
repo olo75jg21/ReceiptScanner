@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
-import 'package:mobile/product/widget/v1_text_field_container.dart';
-import 'package:mobile/product/widget/v1_text_form_field.dart';
+import 'package:mobile/product/form/login_form.dart';
 import '/core/constant/app_color.dart';
 import '/core/constant/app_text.dart';
 import '/product/widget/custom_elevated_button.dart';
@@ -13,50 +12,8 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _body(context),
-    );
-  }
-
-  SizedBox _body(BuildContext context) {
-    return SizedBox(
-      height: context.height * 1,
-      width: context.width * 1,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            context.emptySizedHeightBoxNormal,
-            topText(context),
-            context.emptySizedHeightBoxLow3x,
-            V1TextFieldContainer(
-              height: context.height * 0.07,
-              width: context.width * 0.8,
-              child: const V1TextFormField(
-                hinttext: AppText.email,
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: AppColors.loginColor,
-                ),
-              ),
-            ),
-            context.emptySizedHeightBoxLow,
-            midText(context),
-            context.emptySizedHeightBoxLow,
-            CustomElevatedButton(
-              borderRadius: 20,
-              color: AppColors.loginColor,
-              height: context.height * 0.07,
-              width: context.width * 0.6,
-              onPressed: null,
-              child: Text(
-                AppText.login.toUpperCase(),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            bottomText(context),
-          ],
-        ),
-      ),
+    return const Scaffold(
+      body: LoginForm(),
     );
   }
 

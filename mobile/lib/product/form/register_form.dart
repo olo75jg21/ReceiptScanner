@@ -3,37 +3,35 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 import 'package:mobile/core/constant/app_text.dart';
-import 'package:mobile/core/utility/secure_storage.dart';
 import 'package:mobile/core/utility/validator.dart';
 import 'package:mobile/product/widget/v1_container.dart';
 import 'package:mobile/product/widget/v1_elevated_button.dart';
 import 'package:mobile/product/widget/v1_text_form_field.dart';
 import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/core/utility/http_client.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mobile/view/register_view.dart';
-import 'package:mobile/view/test_view.dart';
+import 'package:mobile/view/login_view.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  LoginFormState createState() {
-    return LoginFormState();
+  RegisterFormState createState() {
+    return RegisterFormState();
   }
 }
 
 // Define a corresponding State class.
 // This class holds data related to the form.
-class LoginFormState extends State<LoginForm> {
+class RegisterFormState extends State<RegisterForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
   // Note: This is a `GlobalKey<FormState>`,
-  // not a GlobalKey<LoginFormState>.
+  // not a GlobalKey<RegisterFormState>.
   final _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
+  late String _confirmPassword;
 
   // @override
   // void initState() {}
@@ -55,28 +53,18 @@ class LoginFormState extends State<LoginForm> {
       _formKey.currentState!.save();
       // Send login request.
       await HttpClient.post(
-        'login',
-        jsonEncode(<String, String>{'username': _email, 'password': _password}),
-      ).then((response) {
-        dynamic body = jsonDecode(response.body);
-        showAlert(
-            response.statusCode == 200 ? AppColors.success : AppColors.error,
-            Text(
-              body['message'],
-            ));
-        secureStorage.write(key: 'jwt', value: body['token']);
-        secureStorage.write(key: 'usr', value: body['id']);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const TestView()),
-        );
-      }).catchError((_) {
-        showAlert(
-          AppColors.error,
-          const Text(AppText.serverConnectionError),
-        );
-        return null;
-      });
+        'register',
+        jsonEncode(<String, String>{'email': _email, 'password': _password}),
+      )
+          .then((response) => showAlert(
+              response.statusCode == 200 ? AppColors.success : AppColors.error,
+              Text(
+                jsonDecode(response.body)['message'],
+              )))
+          .catchError(
+            (e) => showAlert(
+                AppColors.error, const Text(AppText.serverConnectionError)),
+          );
     }
   }
 
@@ -95,7 +83,7 @@ class LoginFormState extends State<LoginForm> {
             context.emptySizedHeightBoxLow3x,
             context.emptySizedHeightBoxLow3x,
             Text(
-              AppText.login.toUpperCase(),
+              AppText.signUp.toUpperCase(),
               style: context.textTheme.headline5!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
@@ -125,34 +113,30 @@ class LoginFormState extends State<LoginForm> {
                   color: AppColors.loginColor,
                 ),
                 suffixIcon: const Icon(Icons.remove_red_eye),
-                // validator: (value) => Validator.password(value),
+                validator: (value) {
+                  _confirmPassword = value;
+                  Validator.password(value);
+                },
                 onSaved: (value) => _password = value,
               ),
             ),
+            context.emptySizedHeightBoxLow,
             SizedBox(
-              height: 1.45 * height,
-              width: 1.0625 * width,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Switch(
-                        value: true,
-                        onChanged: (value) {},
-                        activeColor: Colors.white,
-                        activeTrackColor: AppColors.loginColor,
-                      ),
-                      const Text(AppText.rememberMe),
-                    ],
-                  ),
-                  const Text(
-                    AppText.already,
-                  ),
-                ],
+              height: height,
+              width: width,
+              child: V1TextFormField(
+                hinttext: AppText.confirm,
+                prefixIcon: const Icon(
+                  Icons.lock,
+                  color: AppColors.loginColor,
+                ),
+                suffixIcon: const Icon(Icons.remove_red_eye),
+                validator: (value) =>
+                    Validator.passwordConfirm(value, _confirmPassword),
+                onSaved: (value) => _password = value,
               ),
             ),
-            context.emptySizedHeightBoxLow,
+            context.emptySizedHeightBoxLow3x,
             V1Container(
               height: height,
               width: width * 0.75,
@@ -160,30 +144,30 @@ class LoginFormState extends State<LoginForm> {
                 borderRadius: 20,
                 color: AppColors.loginColor,
                 onPressed: () => submitForm(),
-                child: Text(
-                  AppText.login.toUpperCase(),
-                  style: const TextStyle(color: Colors.white),
+                child: const Text(
+                  AppText.registernow,
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
             context.emptySizedHeightBoxLow,
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  AppText.account,
+                  AppText.already,
                 ),
                 TextButton(
                   child: const Text(
-                    AppText.registernow,
+                    AppText.login,
                     style: TextStyle(color: AppColors.loginColor),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegisterView()),
+                          builder: (context) => const LoginView()),
                     );
                   },
                 )

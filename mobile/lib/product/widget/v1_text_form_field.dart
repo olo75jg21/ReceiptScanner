@@ -6,6 +6,7 @@ class V1TextFormField extends StatelessWidget {
   final Widget? prefixIcon;
   final String? hinttext;
   final Function? validator;
+  final Function? onSaved;
   // final Function? onChanged;
 
   const V1TextFormField({
@@ -14,24 +15,22 @@ class V1TextFormField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.validator,
+    this.onSaved,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
+          errorMaxLines: 3,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           hintText: hinttext,
-          hintStyle: context.textTheme.bodyText1!
-              .copyWith(fontWeight: FontWeight.normal),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
         ),
         validator: (value) => validator?.call(value),
+        onSaved: (value) => onSaved?.call(value),
         // onChanged: (value) => onChanged?.call(value),
       ),
     );

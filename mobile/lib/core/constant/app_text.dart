@@ -13,4 +13,14 @@ class AppText {
   static const String registernow = "Register Now";
   static const String loginwith = "Log in with";
   static const String or = "OR";
+
+  static const String serverConnectionError =
+      "The problem occurred while connecting to the server.";
+
+  static const String invalidEmail = "The email provided is invalid.";
+  static const String invalidPassword =
+      "The password provided should contain 8-32 character and at least 1 capital letter, 1 lowercase letter, 1 digit, 1 special character.";
+  static const String invalidConfirmPassword =
+      "The given passwords do not match.";
+  static const String notEmptyField = "The field above cannot be empty.";
 }

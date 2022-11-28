@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
+import 'package:mobile/product/form/register_form.dart';
 import '/core/constant/app_color.dart';
 import '/core/constant/app_text.dart';
 import '/product/widget/custom_elevated_button.dart';
 import '/product/widget/custom_textfield.dart';
 
-import '/model/user.dart';
+import '../core/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'login_view.dart';
 
@@ -28,7 +29,7 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _body(context),
+      body: RegisterForm(),
     );
   }
 

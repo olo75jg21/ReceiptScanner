@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class V1TextFieldContainer extends StatelessWidget {
+class V1Container extends StatelessWidget {
   final Widget child;
   final double? height;
   final double? width;
 
-  const V1TextFieldContainer({
+  const V1Container({
     Key? key,
     this.height,
     this.width,
