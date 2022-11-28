@@ -77,10 +77,10 @@ const register = (req,res,next) => {
 }
 
 const login = (req,res,next) => {
-    var username = req.body.username
+    var email = req.body.email
     var password = req.body.password
 
-    User.findOne({$or: [{username: username}, {email:username}] })
+    User.findOne({email:email})
     .then( user => {
         if(user) {
             bcrypt.compare(password, user.password, function(err,result){
@@ -91,7 +91,7 @@ const login = (req,res,next) => {
                 }
                 if(result){
                     // token doesn't expire 
-                    let token = jwt.sign({name: user.username}, 'AzQ,PI)0(')
+                    let token = jwt.sign({name: user.email}, 'AzQ,PI)0(')
                     res.json({
                         message: 'Login succesful',
                         token: token,
@@ -106,7 +106,7 @@ const login = (req,res,next) => {
             })
         }else{
             res.json({
-                message: 'Wrong username/email or password'
+                message: 'Wrong email or password'
             })
         }
     })
