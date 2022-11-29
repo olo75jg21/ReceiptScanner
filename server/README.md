@@ -22,8 +22,7 @@ Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w
 ### Możliwe odpowiedzi
 * <font color="green"> Status 201 </font> "Account was created successfully" 
 * <font color="red"> Status 409 </font> "Email already exists"
-* <font color="red"> Status 500 </font> "Bcrypt error"
-* <font color="red"> Status 500 </font> "Creating account error"<br/></br>
+* <font color="red"> Status 500 </font> "Internal server error"<br/></br>
 
 ## POST /login
 Logowanie 
@@ -37,7 +36,7 @@ Logowanie
 ### Możliwe odpowiedzi
 * <font color="green">Status 200 </font> "Successfully logged in"
 * <font color="red"> Status 401 </font> "Invalid credentials"
-* <font color="red"> Status 500 </font> "Bcrypt error"
+* <font color="red"> Status 500 </font> "Internal server error"
 
 ### Informacje, które należy przechować w aplikacji do dalszej pracy
 * token

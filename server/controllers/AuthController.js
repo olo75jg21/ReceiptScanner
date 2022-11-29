@@ -19,13 +19,13 @@ const register = (req, res, next) => {
         .then(user => {
             if (user) {
                 res.status(409).json({
-                    message: "Email already exists",
+                    message: 'Email already exists',
                 })
             } else {
                 bcrypt.hash(req.body.password, 10, function (err, hashedPass) {
                     if (err) {
                         res.status(500).json({
-                            message: "Bcrypt error"
+                            message: 'Internal server error'
                         })
                     }
 
@@ -42,7 +42,7 @@ const register = (req, res, next) => {
                         })
                         .catch(error => {
                             res.status(500).json({
-                                message: 'Creating account error',
+                                message: 'Internal server error',
                             })
                         })
                 })
@@ -60,7 +60,7 @@ const login = (req, res, next) => {
                 bcrypt.compare(password, user.password, function (err, result) {
                     if (err) {
                         res.status(500).json({
-                            message: "Bcrypt error"
+                            message: 'Internal server error'
                         })
                     }
                     if (result) {
