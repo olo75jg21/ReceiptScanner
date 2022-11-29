@@ -4,47 +4,46 @@
 Rejstracja
 ```JSON
 {
-    "firstName": "admin",
-    "secondName": "admin",
-    "username": "admin",
-    "email": "admin@admin.de",
-    "password": "admin" 
+    "email": "admin@test.pl",
+    "password": "Admintest@1"
 }
 ```
 
 ### Walidacja danych
-* firstName - długość co najmniej trzy oraz musi składać się z samych liter
-* secondName - długość co najmniej trzy oraz musi składać się z samych liter
-* username - długość co najmniej trzy 
 * email - musi mieć prawidłowy format adresu email np. test@gmail.com
 * password - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
 
+### Odpowiedzi dotyczące walidacji
+Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w jednej odpowiedzi
+* <font color="red"> Status 400 </font> "Invalid email"
+* <font color="red"> Status 400 </font> "Password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
+
+
 ### Możliwe odpowiedzi
-* "User Added Successfully"
-* "Username and email already exists"
-* "Username already exists"
-* "Email already exists"
-* 'An error occured'<br/></br>
+* <font color="green"> Status 201 </font> "Account was created successfully" 
+* <font color="red"> Status 409 </font> "Email already exists"
+* <font color="red"> Status 500 </font> "Bcrypt error"
+* <font color="red"> Status 500 </font> "Creating account error"<br/></br>
 
 ## POST /login
 Logowanie 
 ```JSON
 {
-    "username": "email@.pl",
-    "password": "pass" 
+    "email": "admin@test.pl",
+    "password": "Admintest@1"
 }
 ```
 
 ### Możliwe odpowiedzi
-* 'Login succesful'
-* 'Password is incorrect'
-* 'No user found'
+* <font color="green">Status 200 </font> "Successfully logged in"
+* <font color="red"> Status 401 </font> "Invalid credentials"
+* <font color="red"> Status 500 </font> "Bcrypt error"
 
 ### Informacje, które należy przechować w aplikacji do dalszej pracy
 * token
 * id
 
-Token potrzebny będzie do autoryzacji, musi znajdować się w Headerze 
+Token potrzebny będzie do autoryzacji pozostałych requestów, musi znajdować się w Headerze 
 
 Id użytkownika jest używane, aby dostać paragony<br/><br/>
 
