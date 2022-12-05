@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kartal/kartal.dart';
 import 'package:mobile/core/constant/app_text.dart';
 import 'package:mobile/core/utility/validator.dart';
+import 'package:mobile/product/form/login_form.dart';
 import 'package:mobile/product/widget/v1_container.dart';
 import 'package:mobile/product/widget/v1_elevated_button.dart';
 import 'package:mobile/product/widget/v1_text_form_field.dart';
 import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/core/utility/http_client.dart';
-import 'package:mobile/view/login_view.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -32,9 +33,16 @@ class RegisterFormState extends State<RegisterForm> {
   late String _email;
   late String _password;
   late String _confirmPassword;
+  late bool _confirmPasswordVisible;
+  late bool _passwordVisible;
 
-  // @override
-  // void initState() {}
+  @override
+  void initState() {
+    super.initState();
+    _confirmPasswordVisible = false;
+    _passwordVisible = false;
+  }
+
   void showAlert(Color backgroundColor, Widget content) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,16 +63,17 @@ class RegisterFormState extends State<RegisterForm> {
       await HttpClient.post(
         'register',
         jsonEncode(<String, String>{'email': _email, 'password': _password}),
-      )
-          .then((response) => showAlert(
-              response.statusCode == 200 ? AppColors.success : AppColors.error,
-              Text(
-                jsonDecode(response.body)['message'],
-              )))
-          .catchError(
-            (e) => showAlert(
-                AppColors.error, const Text(AppText.serverConnectionError)),
-          );
+      ).then((response) {
+        showAlert(
+            response.statusCode == 201 ? AppColors.success : AppColors.error,
+            Text(
+              jsonDecode(response.body)['message'].toString(),
+            ));
+      }).catchError(
+        (e) {
+          showAlert(AppColors.error, const Text(AppText.serverConnectionError));
+        },
+      );
     }
   }
 
@@ -107,12 +116,22 @@ class RegisterFormState extends State<RegisterForm> {
               height: height,
               width: width,
               child: V1TextFormField(
+                obscureText: !_passwordVisible,
                 hinttext: AppText.password,
                 prefixIcon: const Icon(
                   Icons.lock,
                   color: AppColors.loginColor,
                 ),
-                suffixIcon: const Icon(Icons.remove_red_eye),
+                suffixIcon: IconButton(
+                  icon: FaIcon(_passwordVisible
+                      ? FontAwesomeIcons.eye
+                      : FontAwesomeIcons.eyeSlash),
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                  },
+                ),
                 validator: (value) {
                   _confirmPassword = value;
                   Validator.password(value);
@@ -125,12 +144,22 @@ class RegisterFormState extends State<RegisterForm> {
               height: height,
               width: width,
               child: V1TextFormField(
+                obscureText: !_confirmPasswordVisible,
                 hinttext: AppText.confirm,
                 prefixIcon: const Icon(
                   Icons.lock,
                   color: AppColors.loginColor,
                 ),
-                suffixIcon: const Icon(Icons.remove_red_eye),
+                suffixIcon: IconButton(
+                  icon: FaIcon(_confirmPasswordVisible
+                      ? FontAwesomeIcons.eye
+                      : FontAwesomeIcons.eyeSlash),
+                  onPressed: () {
+                    setState(() {
+                      _confirmPasswordVisible = !_confirmPasswordVisible;
+                    });
+                  },
+                ),
                 validator: (value) =>
                     Validator.passwordConfirm(value, _confirmPassword),
                 onSaved: (value) => _password = value,
@@ -167,7 +196,10 @@ class RegisterFormState extends State<RegisterForm> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginView()),
+                        builder: (context) => const Scaffold(
+                          body: LoginForm(),
+                        ),
+                      ),
                     );
                   },
                 )
