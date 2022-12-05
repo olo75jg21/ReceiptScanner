@@ -17,6 +17,8 @@ router.post('/register', [
     }),
  ] ,AuthController.register)
 
-    router.post('/login', AuthController.login)
+router.post('/login', AuthController.login)
+router.get('/verify/:userId/:uniqueString', AuthController.verify)
+router.get('/verified', AuthController.verified)
 
 module.exports = router
