@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kartal/kartal.dart';
 
 class V1TextFormField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final String? hinttext;
+  final bool obscureText;
   final Function? validator;
   final Function? onSaved;
   // final Function? onChanged;
@@ -12,6 +12,7 @@ class V1TextFormField extends StatelessWidget {
   const V1TextFormField({
     Key? key,
     this.hinttext,
+    this.obscureText = false,
     this.suffixIcon,
     this.prefixIcon,
     this.validator,
@@ -22,6 +23,7 @@ class V1TextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: TextFormField(
+        obscureText: obscureText,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
           errorMaxLines: 3,

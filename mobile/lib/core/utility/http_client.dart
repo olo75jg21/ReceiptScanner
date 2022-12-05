@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class HttpClient {
   static const String _url = AppEnv.url;
-  static const Duration _duration = Duration(seconds: 5);
+  static const Duration _duration = Duration(seconds: 3);
 
   // sends POST request to given route with given body
   // returns HTTP response

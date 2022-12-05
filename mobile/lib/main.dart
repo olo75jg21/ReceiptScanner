@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '/view/login_view.dart';
-import 'package:mobile/product/form/login_form.dart';
+import 'package:mobile/view/test_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,15 +23,15 @@ class MyApp extends StatelessWidget {
     //   ),
     // );
     return MaterialApp(
-      title: 'ReceiptScanner',
+      title: appTitle,
       debugShowCheckedModeBanner: false,
       // home: Scaffold(
-      //   appBar: AppBar(
-      //     title: const Text(appTitle),
-      //   ),
-      //   body: const LoginForm(),
+      // appBar: AppBar(
+      //   title: const Text(appTitle),
       // ),
-      home: LoginView(),
+      //   body: LoginForm(),
+      // ),
+      home: TestView(),
     );
   }
 }

@@ -5,14 +5,14 @@ import 'package:kartal/kartal.dart';
 import 'package:mobile/core/constant/app_text.dart';
 import 'package:mobile/core/utility/secure_storage.dart';
 import 'package:mobile/core/utility/validator.dart';
+import 'package:mobile/product/form/register_form.dart';
 import 'package:mobile/product/widget/v1_container.dart';
 import 'package:mobile/product/widget/v1_elevated_button.dart';
 import 'package:mobile/product/widget/v1_text_form_field.dart';
 import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/core/utility/http_client.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mobile/view/register_view.dart';
 import 'package:mobile/view/test_view.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -34,9 +34,14 @@ class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   late String _email;
   late String _password;
+  late bool _passwordVisible;
 
-  // @override
-  // void initState() {}
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+  }
+
   void showAlert(Color backgroundColor, Widget content) {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,7 +61,7 @@ class LoginFormState extends State<LoginForm> {
       // Send login request.
       await HttpClient.post(
         'login',
-        jsonEncode(<String, String>{'username': _email, 'password': _password}),
+        jsonEncode(<String, String>{'email': _email, 'password': _password}),
       ).then((response) {
         dynamic body = jsonDecode(response.body);
         showAlert(
@@ -68,7 +73,7 @@ class LoginFormState extends State<LoginForm> {
         secureStorage.write(key: 'usr', value: body['id']);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const TestView()),
+          MaterialPageRoute(builder: (context) => TestView()),
         );
       }).catchError((_) {
         showAlert(
@@ -119,12 +124,22 @@ class LoginFormState extends State<LoginForm> {
               height: height,
               width: width,
               child: V1TextFormField(
+                obscureText: !_passwordVisible,
                 hinttext: AppText.password,
                 prefixIcon: const Icon(
                   Icons.lock,
                   color: AppColors.loginColor,
                 ),
-                suffixIcon: const Icon(Icons.remove_red_eye),
+                suffixIcon: IconButton(
+                  icon: FaIcon(_passwordVisible
+                      ? FontAwesomeIcons.eye
+                      : FontAwesomeIcons.eyeSlash),
+                  onPressed: () {
+                    setState(() {
+                      _passwordVisible = !_passwordVisible;
+                    });
+                  },
+                ),
                 // validator: (value) => Validator.password(value),
                 onSaved: (value) => _password = value,
               ),
@@ -183,7 +198,10 @@ class LoginFormState extends State<LoginForm> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegisterView()),
+                        builder: (context) => const Scaffold(
+                          body: RegisterForm(),
+                        ),
+                      ),
                     );
                   },
                 )

@@ -30,8 +30,8 @@ class User {
     if (response.statusCode == 200) {
       return User.fromJson(jsonDecode(response.body));
     } else {
-      print('response code: response.statusCode');
-      print(response.body);
+      // print('response code: response.statusCode');
+      // print(response.body);
 
       throw Exception('Failed to create User.');
     }
