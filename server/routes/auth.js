@@ -18,7 +18,12 @@ router.post('/register', [
  ] ,AuthController.register)
 
 router.post('/login', AuthController.login)
+
 router.get('/verify/:userId/:uniqueString', AuthController.verify)
 router.get('/verified', AuthController.verified)
+
+router.post('/sendPasswordReset', AuthController.sendPasswordReset)
+router.get('/resetPassword/:userId/:resetString', AuthController.resetPassword)
+router.get('/reset', AuthController.reset)
 
 module.exports = router

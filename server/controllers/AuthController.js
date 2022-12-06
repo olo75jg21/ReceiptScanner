@@ -14,24 +14,194 @@ const handlebars = require('handlebars')
 
 const { check, validationResult } = require('express-validator')
 
+// ---------------------------------------------------------
+const PasswordReset = require('../models/PasswordReset')
+const router = require('../routes/auth')
+
+const sendPasswordReset = (req, res, next) => {
+    const { email, newPassword } = req.body
+
+    User.find({ email })
+        .then((data) => {
+            if (data.length) {
+                if (!data[0].verified) {
+                    res.status(401).json({
+                        message: "Email hasn't been verified yet. Check your inbox."
+                    })
+                } else {
+                    sendResetEmail(data[0], newPassword, res)
+                }
+            } else {
+                res.status(403).json({
+                    // No account with the supplied email exists
+                    message: 'Wrong credentials'
+                })
+            }
+        })
+        .catch((error) => {
+            res.status(500).json({
+                message: 'Internal server error'
+            })
+        })
+}
+
+
+const sendResetEmail = ({ _id, email }, newPassword, res) => {
+    const resetString = uuidv4() + _id
+    const currentUrl = "http://localhost:3000/"
+
+    PasswordReset.deleteMany({ userId: _id })
+        .then((result) => {
+
+            const filePath = path.join(__dirname, './../views/verify.html');
+            const source = fs.readFileSync(filePath, 'utf-8').toString();
+            const template = handlebars.compile(source);
+            const replacements = {
+                customizedHref: currentUrl + "resetPassword/" + _id + "/" + resetString,
+                message: "We heard that you lost the password. Don't worry, use the link below to reset it.",
+                buttonText: "Reset Password"
+            };
+            const htmlToSend = template(replacements);
+
+            const mailOptions = {
+                from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: "Password Reset",
+                html: htmlToSend
+            }
+
+            bcrypt.hash(resetString, 10)
+                .then((hashedResetString) => {
+
+                    bcrypt.hash(newPassword, 10)
+                        .then((hashedNewPassword) => {
+                            const newPasswordReset = new PasswordReset({
+                                userId: _id,
+                                resetString: hashedResetString,
+                                newPassword: hashedNewPassword,
+                                createdAt: Date.now(),
+                                expiresAt: Date.now() + 3600000
+                            })
+
+                            newPasswordReset.save()
+                                .then(() => {
+                                    transporter.sendMail(mailOptions)
+                                        .then(() => {
+                                            res.status(200).json({
+                                                message: "Password reset confirmation email was sent"
+                                            })
+                                        })
+                                        .catch((error) => {
+                                            res.status(500).json({
+                                                message: 'Internal server error'
+                                            })
+                                        })
+                                })
+                                .catch((error) => {
+                                    res.status(500).json({
+                                        message: 'Internal server error'
+                                    })
+                                })
+                        })
+                        .catch((error) => {
+                            res.status(500).json({
+                                message: 'Internal server error'
+                            })
+                        })
+                })
+                .catch((error) => {
+                    res.status(500).json({
+                        message: 'Internal server error'
+                    })
+                })
+        })
+        .catch((error) => {
+            res.status(500).json({
+                message: 'Internal server error'
+            })
+        })
+}
+
+const reset = (req, res, next) => {
+    res.sendFile(path.join(__dirname, "./../views/changedPassword.html"))
+}
+
+let messageWrong = 'Something went wrong'
+
+const resetPassword = (req, res, next) => {
+    console.log("here")
+    let { userId, resetString } = req.params
+
+    PasswordReset.find({ userId })
+        .then((result) => {
+            if (result.length > 0) {
+                const expiresAt = result[0].expiresAt
+                const hashedResetString = result[0].resetString
+                const hashedNewPassword = result[0].newPassword
+
+                if (expiresAt < Date.now()) {
+                    PasswordReset.deleteOne({ userId })
+                        .then(() => {
+                            let message = 'Password reset link has expired'
+                            res.redirect(`/reset?error=true&message=${message}`)
+                        })
+                        .catch((error) => {
+                            let message = 'Something went wrong'
+                            res.redirect(`/reset?error=true&message=${message}`)
+                        })
+                } else {
+                    bcrypt.compare(resetString, hashedResetString)
+                        .then((result) => {
+                            if (result) {
+                                User.updateOne({ _id: userId }, { password: hashedNewPassword })
+                                    .then(() => {
+                                        PasswordReset.deleteOne({ userId })
+                                            .then(() => {
+                                                res.sendFile(path.join(__dirname, "./../views/changedPassword.html"))
+                                            })
+                                            .catch((error) => {
+                                                res.redirect(`/reset?error=true&message=${messageWrong}`)
+                                            })
+                                    })
+                                    .catch((error) => {
+                                        res.redirect(`/reset?error=true&message=${messageWrong}`)
+                                    })
+                            }
+                        })
+                        .catch((error) => {
+                            res.redirect(`/reset?error=true&message=${messageWrong}`)
+                        })
+                }
+            } else {
+                res.redirect(`/reset?error=true&message=${messageWrong}`)
+            }
+        })
+        .catch((error) => {
+            res.redirect(`/reset?error=true&message=${messageWrong}`)
+        })
+}
+
+
+//----------------------------------------------------------
+
 var transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
     port: 2525,
     auth: {
-      user: process.env.AUTH_EMAIL,
-      pass: process.env.AUTH_PASS
+        user: process.env.AUTH_EMAIL,
+        pass: process.env.AUTH_PASS
     }
-  });
+});
 
-  transporter.verify((error,success) => {
-    if(error) {
+transporter.verify((error, success) => {
+    if (error) {
         console.log(error)
     } else {
         console.log("Ready for messages")
     }
-  })
+})
 
-  const sendVerificationEmail = ({_id, email}, res) => {
+const sendVerificationEmail = ({ _id, email }, res) => {
     const currentUrl = "http://localhost:3000/"
     const uniqueString = uuidv4() + _id
 
@@ -39,7 +209,9 @@ var transporter = nodemailer.createTransport({
     const source = fs.readFileSync(filePath, 'utf-8').toString();
     const template = handlebars.compile(source);
     const replacements = {
-        customizedHref: currentUrl + "verify/" + _id + "/" + uniqueString
+        customizedHref: currentUrl + "verify/" + _id + "/" + uniqueString,
+        message: "We're excited to have you get started. First, you need to confirm your account. Just press the button below.",
+        buttonText: "Confirm Account"
     };
     const htmlToSend = template(replacements);
 
@@ -47,107 +219,98 @@ var transporter = nodemailer.createTransport({
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Verify Your Email",
-        //html: fs.createReadStream("./views/verify.html", 'utf8')
         html: htmlToSend
     }
 
     bcrypt.hash(uniqueString, 10)
-    .then( (hashedUniqueString) => {
-        const newVerification = new UserVerification({
-            userId: _id,
-            uniqueString: hashedUniqueString,
-            createdAt: Date.now(),
-            expiresAt: Date.now() + 21600000
-        })
-
-        newVerification
-            .save()
-            .then(() => {
-                transporter.sendMail(mailOptions)
-                    .then( () => {
-                        res.status(201).json({
-                            message: 'Account was created, email confirmation was sent',
-                        })
-                    })
+        .then((hashedUniqueString) => {
+            const newVerification = new UserVerification({
+                userId: _id,
+                uniqueString: hashedUniqueString,
+                createdAt: Date.now(),
+                expiresAt: Date.now() + 21600000
             })
-            .catch((error) => {
-                res.status(500).json({
-                    message: 'Internal server error'
-                })
-            })
-    })
-    .catch( () => {
-        res.status(500).json({
-            message: 'Internal server error'
-        })
-    })
-  }
 
-  //router.get("/verify/:userId/:uniqueString", (req,res) => {
-  const verify = (req, res, next) => {   
-    let {userId, uniqueString } = req.params
-
-    UserVerification.find({userId})
-    .then( (result) => {
-        if( result.length > 0){
-            const {expiresAt} = result[0];
-            const hashedUniqueString = result[0].uniqueString
-
-            if(expiresAt < Date.now()) {
-                UserVerification.deleteOne({userId})
-                .then( (result) => {
-                    User.deleteOne({ userId })
-                    .then( () => {
-                        let message = "Link has expired. Please sign up again."
-                        res.redirect(`/verified/error=true&message=${message}`)
-                    })
-                    .catch( (error) => {
-                        let message = "Clearing user with expired unique string failed"
-                        res.redirect(`/verified/error=true&message=${message}`)
-                    })
-                })
-                .catch( (error) => {
-                    let message = "Account error occurred while clearing expired user verification record"
-                    res.redirect(`/verified/error=true&message=${message}`)
-                })
-            } else {
-                bcrypt.compare(uniqueString, hashedUniqueString)
-                .then((result) => {
-                    if(result) {
-                        User.updateOne({_id: userId}, {verified: true})
-                        .then( () => {
-                            UserVerification.deleteOne({userId})
-                            .then( () => {
-                                res.sendFile(path.join(__dirname, "./../views/verified.html"))
-                            })
-                            .catch( (error) => {
-                                let message = 'An error occurred while finalizing successful verification'
-                                res.redirect(`/verified/error=true&message=${message}`)
+            newVerification
+                .save()
+                .then(() => {
+                    transporter.sendMail(mailOptions)
+                        .then(() => {
+                            res.status(201).json({
+                                message: 'Account was created, email confirmation was sent',
                             })
                         })
-                        .catch((error) => {
-                            let message = 'An error occurred while updating user record to show verified'
-                            res.redirect(`/verified/error=true&message=${message}`)
-                        })
-                    } else {
-                        let message = 'Invalid verification details passed. Check your inbox.'
-                        res.redirect(`/verified/error=true&message=${message}`)
-                    }
                 })
                 .catch((error) => {
-                    let message = "An error occurred while comparing unique strings."
-                    res.redirect(`/verified/error=true&message=${message}`)
+                    res.status(500).json({
+                        message: 'Internal server error'
+                    })
                 })
-            }
+        })
+        .catch(() => {
+            res.status(500).json({
+                message: 'Internal server error'
+            })
+        })
+}
 
-        }else {
-            let message = "Account record doesn't exist or has been verified already. Please sign up or log in."
-            res.redirect(`/verified/error=true&message=${message}`)
-        }
-    })
-    .catch((error) => {
-            let message = 'An error occurred while checking for existing user verification record'
-            res.redirect(`/verified/error=true&message=${message}`)
+const verify = (req, res, next) => {
+    let { userId, uniqueString } = req.params
+
+    UserVerification.find({ userId })
+        .then((result) => {
+            if (result.length > 0) {
+                const { expiresAt } = result[0];
+                const hashedUniqueString = result[0].uniqueString
+
+                if (expiresAt < Date.now()) {
+                    UserVerification.deleteOne({ userId })
+                        .then((result) => {
+                            User.deleteOne({ userId })
+                                .then(() => {
+                                    let message = "Link has expired. Please sign up again."
+                                    res.redirect(`/verified?error=true&message=${message}`)
+                                })
+                                .catch((error) => {
+                                    res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                })
+                        })
+                        .catch((error) => {
+                            res.redirect(`/verified?error=true&message=${messageWrong}`)
+                        })
+                } else {
+                    bcrypt.compare(uniqueString, hashedUniqueString)
+                        .then((result) => {
+                            if (result) {
+                                User.updateOne({ _id: userId }, { verified: true })
+                                    .then(() => {
+                                        UserVerification.deleteOne({ userId })
+                                            .then(() => {
+                                                res.sendFile(path.join(__dirname, "./../views/verified.html"))
+                                            })
+                                            .catch((error) => {
+                                                res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                            })
+                                    })
+                                    .catch((error) => {
+                                        res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                    })
+                            } else {
+                                res.redirect(`/verified?error=true&message=${messageWrong}`)
+                            }
+                        })
+                        .catch((error) => {
+                            res.redirect(`/verified?error=true&message=${messageWrong}`)
+                        })
+                }
+
+            } else {
+                let message = "Account doesn't exist or has been verified already. Please sign up or log in."
+                res.redirect(`/verified?error=true&message=${message}`)
+            }
+        })
+        .catch((error) => {
+            res.redirect(`/verified?error=true&message=${messageWrong}`)
         })
 }
 
@@ -156,13 +319,13 @@ const verified = (req, res, next) => {
 }
 
 const register = (req, res, next) => {
-    const errorFormatter = ({msg}) => {
+    const errorFormatter = ({ msg }) => {
         return `${msg}`;
-      };
+    };
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ 
-            message: errors.array(),     
+        return res.status(400).json({
+            message: errors.array(),
         });
     }
 
@@ -187,14 +350,14 @@ const register = (req, res, next) => {
                     })
 
                     user.save()
-                        .then( (result) => {
-                           sendVerificationEmail(result,res)
+                        .then((result) => {
+                            sendVerificationEmail(result, res)
                         })
-                        .catch( (error) => {
+                        .catch((error) => {
                             console.log(error),
-                            res.status(500).json({
-                                message: 'Internal server error',
-                            })
+                                res.status(500).json({
+                                    message: 'Internal server error',
+                                })
                         })
                 })
             }
@@ -216,12 +379,12 @@ const login = (req, res, next) => {
                     }
                     if (result) {
 
-                        if(!user.verified){
+                        if (!user.verified) {
                             res.status(400).json({
                                 message: "Email hasn't been verified yet. Check your inbox."
                             })
-                        }else {
-                             // token doesn't expire 
+                        } else {
+                            // token doesn't expire 
                             let token = jwt.sign({ name: user.email }, 'AzQ,PI)0(')
                             res.status(200).json({
                                 message: 'Successfully logged in',
@@ -248,5 +411,8 @@ module.exports = {
     register,
     login,
     verify,
-    verified
+    verified,
+    sendPasswordReset,
+    resetPassword,
+    reset
 }
