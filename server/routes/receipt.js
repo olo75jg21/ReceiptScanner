@@ -5,7 +5,7 @@ const ReceiptController = require('../controllers/ReceiptController')
 const authenticate = require('../middleware/authenticate')
 
 
-router.get('/:userId', authenticate,  ReceiptController.show)
+router.get('/:userId', authenticate, ReceiptController.show)
 
 router.post('/:userId', authenticate, ReceiptController.store)
 router.post('/item/:receiptId', authenticate, ReceiptController.storeItem)

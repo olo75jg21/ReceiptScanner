@@ -14,11 +14,39 @@ const handlebars = require('handlebars')
 
 const { check, validationResult } = require('express-validator')
 
+var transporter = nodemailer.createTransport({
+    host: "smtp.mailtrap.io",
+    port: 2525,
+    auth: {
+        user: process.env.AUTH_EMAIL,
+        pass: process.env.AUTH_PASS
+    }
+});
+
+transporter.verify((error, success) => {
+    if (error) {
+        console.log(error)
+    } else {
+        console.log("Ready for messages")
+    }
+})
+
 // ---------------------------------------------------------
 const PasswordReset = require('../models/PasswordReset')
 const router = require('../routes/auth')
 
 const sendPasswordReset = (req, res, next) => {
+    
+    const errorFormatter = ({ msg }) => {
+        return `${msg}`;
+    };
+    const errors = validationResult(req).formatWith(errorFormatter);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            message: errors.array(),
+        });
+    }
+
     const { email, newPassword } = req.body
 
     User.find({ email })
@@ -26,7 +54,7 @@ const sendPasswordReset = (req, res, next) => {
             if (data.length) {
                 if (!data[0].verified) {
                     res.status(401).json({
-                        message: "Email hasn't been verified yet. Check your inbox."
+                        message: "Email hasn't been verified yet. Check your inbox"
                     })
                 } else {
                     sendResetEmail(data[0], newPassword, res)
@@ -123,7 +151,7 @@ const sendResetEmail = ({ _id, email }, newPassword, res) => {
 }
 
 const reset = (req, res, next) => {
-    res.sendFile(path.join(__dirname, "./../views/changedPassword.html"))
+    res.status(200).sendFile(path.join(__dirname, "./../views/changedPassword.html"))
 }
 
 let messageWrong = 'Something went wrong'
@@ -143,11 +171,11 @@ const resetPassword = (req, res, next) => {
                     PasswordReset.deleteOne({ userId })
                         .then(() => {
                             let message = 'Password reset link has expired'
-                            res.redirect(`/reset?error=true&message=${message}`)
+                            res.status(302).redirect(`/reset?error=true&message=${message}`)
                         })
                         .catch((error) => {
                             let message = 'Something went wrong'
-                            res.redirect(`/reset?error=true&message=${message}`)
+                            res.status(302).redirect(`/reset?error=true&message=${message}`)
                         })
                 } else {
                     bcrypt.compare(resetString, hashedResetString)
@@ -157,49 +185,31 @@ const resetPassword = (req, res, next) => {
                                     .then(() => {
                                         PasswordReset.deleteOne({ userId })
                                             .then(() => {
-                                                res.sendFile(path.join(__dirname, "./../views/changedPassword.html"))
+                                                res.status(200).sendFile(path.join(__dirname, "./../views/changedPassword.html"))
                                             })
                                             .catch((error) => {
-                                                res.redirect(`/reset?error=true&message=${messageWrong}`)
+                                                res.status(302).redirect(`/reset?error=true&message=${messageWrong}`)
                                             })
                                     })
                                     .catch((error) => {
-                                        res.redirect(`/reset?error=true&message=${messageWrong}`)
+                                        res.status(302).redirect(`/reset?error=true&message=${messageWrong}`)
                                     })
                             }
                         })
                         .catch((error) => {
-                            res.redirect(`/reset?error=true&message=${messageWrong}`)
+                            res.status(302).redirect(`/reset?error=true&message=${messageWrong}`)
                         })
                 }
             } else {
-                res.redirect(`/reset?error=true&message=${messageWrong}`)
+                res.status(302).redirect(`/reset?error=true&message=${messageWrong}`)
             }
         })
         .catch((error) => {
-            res.redirect(`/reset?error=true&message=${messageWrong}`)
+            res.status(302).redirect(`/reset?error=true&message=${messageWrong}`)
         })
 }
 
-
 //----------------------------------------------------------
-
-var transporter = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS
-    }
-});
-
-transporter.verify((error, success) => {
-    if (error) {
-        console.log(error)
-    } else {
-        console.log("Ready for messages")
-    }
-})
 
 const sendVerificationEmail = ({ _id, email }, res) => {
     const currentUrl = "http://localhost:3000/"
@@ -231,8 +241,7 @@ const sendVerificationEmail = ({ _id, email }, res) => {
                 expiresAt: Date.now() + 21600000
             })
 
-            newVerification
-                .save()
+            newVerification.save()
                 .then(() => {
                     transporter.sendMail(mailOptions)
                         .then(() => {
@@ -269,14 +278,14 @@ const verify = (req, res, next) => {
                             User.deleteOne({ userId })
                                 .then(() => {
                                     let message = "Link has expired. Please sign up again."
-                                    res.redirect(`/verified?error=true&message=${message}`)
+                                    res.status(302).redirect(`/verified?error=true&message=${message}`)
                                 })
                                 .catch((error) => {
-                                    res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                    res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                                 })
                         })
                         .catch((error) => {
-                            res.redirect(`/verified?error=true&message=${messageWrong}`)
+                            res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                         })
                 } else {
                     bcrypt.compare(uniqueString, hashedUniqueString)
@@ -286,36 +295,36 @@ const verify = (req, res, next) => {
                                     .then(() => {
                                         UserVerification.deleteOne({ userId })
                                             .then(() => {
-                                                res.sendFile(path.join(__dirname, "./../views/verified.html"))
+                                                res.status(200).sendFile(path.join(__dirname, "./../views/verified.html"))
                                             })
                                             .catch((error) => {
-                                                res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                                res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                                             })
                                     })
                                     .catch((error) => {
-                                        res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                        res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                                     })
                             } else {
-                                res.redirect(`/verified?error=true&message=${messageWrong}`)
+                                res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                             }
                         })
                         .catch((error) => {
-                            res.redirect(`/verified?error=true&message=${messageWrong}`)
+                            res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
                         })
                 }
 
             } else {
                 let message = "Account doesn't exist or has been verified already. Please sign up or log in."
-                res.redirect(`/verified?error=true&message=${message}`)
+                res.status(302).redirect(`/verified?error=true&message=${message}`)
             }
         })
         .catch((error) => {
-            res.redirect(`/verified?error=true&message=${messageWrong}`)
+            res.status(302).redirect(`/verified?error=true&message=${messageWrong}`)
         })
 }
 
 const verified = (req, res, next) => {
-    res.sendFile(path.join(__dirname, "./../views/verified.html"))
+    res.status(200).sendFile(path.join(__dirname, "./../views/verified.html"))
 }
 
 const register = (req, res, next) => {

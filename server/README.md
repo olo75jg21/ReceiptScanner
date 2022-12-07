@@ -20,7 +20,7 @@ Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w
 
 
 ### Możliwe odpowiedzi
-* <font color="green"> Status 201 </font> "Account was created successfully" 
+* <font color="green"> Status 201 </font> "Account was created, email confirmation was sent" 
 * <font color="red"> Status 409 </font> "Email already exists"
 * <font color="red"> Status 500 </font> "Internal server error"<br/></br>
 
@@ -45,6 +45,62 @@ Logowanie
 Token potrzebny będzie do autoryzacji pozostałych requestów, musi znajdować się w Headerze 
 
 Id użytkownika jest używane, aby dostać paragony<br/><br/>
+
+# GET /verify/{userId}/{uniqueString}
+Służy do potwierdzenia adresu email - przycisk w mailu "Confirm Account"
+
+### Możliwe odpowiedzi
+##### Otwarcie strony "verified.html" z sukcesem weryfikacji maila
+* <font color="green">Status 200 </font>
+##### Przekierowanie do "verified.html" z błędem podczas weryfikacja maila
+* <font color="orange"> Status 302 </font> 
+
+# GET /verified 
+Otwiera widok "verified.html" w przeglądarce
+
+### Możliwa odpowiedz
+##### Otwarcie strony "verified.html" z sukcesem weryfikacji maila
+* <font color="green">Status 200 </font><br/><br/>
+
+# POST /sendPasswordReset
+```JSON
+{
+    "email": "admin@test.pl",
+    "newPassword": "Admintest@1"
+}
+```
+
+### Walidacja danych
+* email - musi mieć prawidłowy format adresu email np. test@gmail.com
+* newPassword - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
+
+
+### Odpowiedzi dotyczące walidacji
+Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w jednej odpowiedzi
+* <font color="red"> Status 400 </font> "Invalid email"
+* <font color="red"> Status 400 </font> "New password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
+
+### Możliwe odpowiedzi
+* <font color="green">Status 200 </font> "Password reset confirmation email was sent"
+* <font color="red"> Status 401 </font> "Email hasn't been verified yet. Check your inbox"
+* <font color="red"> Status 403 </font> "Wrong credentials"
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+
+# GET resetPassword/{userId}/{resetString}
+Służy do potwierdzenia zmiany hasła - przycisk w mailu "Reset Password"
+
+### Możliwe odpowiedzi
+##### Otwarcie strony "changedPassword.html" z sukcesem zmiany hasła
+* <font color="green">Status 200 </font>
+##### Przekierowanie do "verified.html" z błędem podczas zmiany hasła
+* <font color="orange"> Status 302 </font> 
+
+# GET reset
+Otwiera widok "changedPassword.html" w przeglądarce
+
+### Możliwa odpowiedz
+##### Otwarcie strony "changedPassword.html" z sukcesem zmiany hasła
+* <font color="green">Status 200 </font><br/><br/>
 
 # POST /receipt/{idUzytkownika}
 Dodanie paragonu
@@ -83,50 +139,410 @@ Dodanie paragonu
 * "Receipt added"
 * 'An error occured'<br/><br/>
 
-# GET /receipt/{idUzytkownika}
+# GET /receipt/{idUzytkownika}?page={pageNumber}&limit={amountOfRecordsPerPage}
+```JSON
+{
+    "response": {
+        "docs": [
+            {
+                "_id": "6390d6e6702dc655aa70ba3c",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "zabka",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3d"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3e"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3f"
+                    }
+                ],
+                "data": "2022-12-07T18:09:42.981Z",
+                "createdAt": "2022-12-07T18:09:42.987Z",
+                "updatedAt": "2022-12-07T18:09:42.987Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d6fd702dc655aa70ba41",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "biedronka",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba42"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba43"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba44"
+                    }
+                ],
+                "data": "2022-12-07T18:10:05.059Z",
+                "createdAt": "2022-12-07T18:10:05.060Z",
+                "updatedAt": "2022-12-07T18:10:05.060Z",
+                "__v": 0
+            }
+        ],
+        "totalDocs": 22,
+        "limit": 2,
+        "totalPages": 11,
+        "page": 1,
+        "pagingCounter": 1,
+        "hasPrevPage": false,
+        "hasNextPage": true,
+        "prevPage": null,
+        "nextPage": 2
+    }
+}
+```
+## GET /receipt/{idUzytkownika}
 Pobranie wszystkich paragonów danego użytkownika
 ```JSON
 {
-    "response": [
-        {
-            "_id": "63543e238f4924aa537bab5c",
-            "userId": "635431494b9265ce3f320620",
-            "shop": "zabka",
-            "price": 120,
-            "receiptItems": [
-                {
-                    "name": "snickers",
-                    "unit": ".szt",
-                    "amount": 1,
-                    "priceInvidual": 2,
-                    "category": "slodycze",
-                    "_id": "63543e238f4924aa537bab5d"
-                }
-            ],
-            "data": "2022-10-22T19:01:55.451Z",
-        },
-        {
-            "_id": "63545983d81af0f9f1f964e1",
-            "userId": "635431494b9265ce3f320620",
-            "shop": "zabka",
-            "price": 120,
-            "receiptItems": [
-                {
-                    "name": "snickers",
-                    "unit": ".szt",
-                    "amount": 1,
-                    "priceInvidual": 2,
-                    "category": "slodycze",
-                    "_id": "63545983d81af0f9f1f964e2"
-                }
-            ],
-            "data": "2022-10-22T20:58:43.329Z",
-        }
-    ]
+    "response": {
+        "docs": [
+            {
+                "_id": "6390d6e6702dc655aa70ba3c",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "zabka",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3d"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3e"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d6e6702dc655aa70ba3f"
+                    }
+                ],
+                "data": "2022-12-07T18:09:42.981Z",
+                "createdAt": "2022-12-07T18:09:42.987Z",
+                "updatedAt": "2022-12-07T18:09:42.987Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d6fd702dc655aa70ba41",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "biedronka",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba42"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba43"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d6fd702dc655aa70ba44"
+                    }
+                ],
+                "data": "2022-12-07T18:10:05.059Z",
+                "createdAt": "2022-12-07T18:10:05.060Z",
+                "updatedAt": "2022-12-07T18:10:05.060Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d701702dc655aa70ba46",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "netto",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d701702dc655aa70ba47"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d701702dc655aa70ba48"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d701702dc655aa70ba49"
+                    }
+                ],
+                "data": "2022-12-07T18:10:09.897Z",
+                "createdAt": "2022-12-07T18:10:09.898Z",
+                "updatedAt": "2022-12-07T18:10:09.898Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d706702dc655aa70ba4b",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "lidl",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d706702dc655aa70ba4c"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d706702dc655aa70ba4d"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d706702dc655aa70ba4e"
+                    }
+                ],
+                "data": "2022-12-07T18:10:14.169Z",
+                "createdAt": "2022-12-07T18:10:14.170Z",
+                "updatedAt": "2022-12-07T18:10:14.170Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d71d702dc655aa70ba55",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "Krokodylek",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d71d702dc655aa70ba56"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d71d702dc655aa70ba57"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d71d702dc655aa70ba58"
+                    }
+                ],
+                "data": "2022-12-07T18:10:37.381Z",
+                "createdAt": "2022-12-07T18:10:37.382Z",
+                "updatedAt": "2022-12-07T18:10:37.382Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d724702dc655aa70ba5a",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "Stokrotka",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d724702dc655aa70ba5b"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d724702dc655aa70ba5c"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d724702dc655aa70ba5d"
+                    }
+                ],
+                "data": "2022-12-07T18:10:44.139Z",
+                "createdAt": "2022-12-07T18:10:44.140Z",
+                "updatedAt": "2022-12-07T18:10:44.140Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d74f702dc655aa70baa0",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "Test14",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d74f702dc655aa70baa1"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d74f702dc655aa70baa2"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d74f702dc655aa70baa3"
+                    }
+                ],
+                "data": "2022-12-07T18:11:27.676Z",
+                "createdAt": "2022-12-07T18:11:27.677Z",
+                "updatedAt": "2022-12-07T18:11:27.677Z",
+                "__v": 0
+            },
+            {
+                "_id": "6390d751702dc655aa70baa5",
+                "userId": "638f9860688bf896fec35464",
+                "shop": "Test15",
+                "price": 120,
+                "receiptItems": [
+                    {
+                        "name": "snickers",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 2,
+                        "category": "slodycze",
+                        "_id": "6390d751702dc655aa70baa6"
+                    },
+                    {
+                        "name": "lizak",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1,
+                        "category": "slodycze",
+                        "_id": "6390d751702dc655aa70baa7"
+                    },
+                    {
+                        "name": "prince",
+                        "unit": ".szt",
+                        "amount": 1,
+                        "priceInvidual": 1.5,
+                        "category": "slodycze",
+                        "_id": "6390d751702dc655aa70baa8"
+                    }
+                ],
+                "data": "2022-12-07T18:11:29.447Z",
+                "createdAt": "2022-12-07T18:11:29.447Z",
+                "updatedAt": "2022-12-07T18:11:29.447Z",
+                "__v": 0
+            }
+        ],
+        "totalDocs": 8,
+        "offset": 0,
+        "limit": 8,
+        "totalPages": 1,
+        "page": 1,
+        "pagingCounter": 1,
+        "hasPrevPage": false,
+        "hasNextPage": false,
+        "prevPage": null,
+        "nextPage": null
+    }
 }
 ```
+ukryte pola "__v", "createdAt" oraz "updatedAt"
 
-ukryte pola "__v", "createdAt" oraz "updatedAt"<br/><br/>
+### Możliwe odpowiedzi 
+* <font color="green"> Status 200 </font> Zwróci plik Json jak w przykładach powyżej
+* <font color="green"> Status 204 </font> "User does not have any receipts"
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # DELETE /receipt/{idParagonu}
  Usuniecie paragonu

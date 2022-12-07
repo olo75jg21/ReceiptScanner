@@ -1,6 +1,7 @@
 // creating table in mongodb database
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const receiptSchema = new Schema({
     userId: {
@@ -24,5 +25,6 @@ const receiptSchema = new Schema({
     ] 
 }, {timestamps: true})
 
+receiptSchema.plugin(mongoosePaginate)
 const Receipt = mongoose.model('Receipt', receiptSchema)
 module.exports = Receipt
