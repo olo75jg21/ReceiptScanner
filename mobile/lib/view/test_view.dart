@@ -32,11 +32,11 @@ class TestView extends StatelessWidget {
                   'Camera',
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CameraView(camera: _firstCamera)),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   // MaterialPageRoute(
+                  //       // builder: (context) => CameraView(camera: _firstCamera)),
+                  // );
                 },
               )
             ],

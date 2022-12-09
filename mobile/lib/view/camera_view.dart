@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -52,7 +55,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       // Get a specific camera from the list of available cameras.
       widget.camera,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.max,
+      enableAudio: false,
     );
 
     // Next, initialize the controller. This returns a Future.
@@ -100,6 +104,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
             if (!mounted) return;
 
+            print(image.path);
+
             // If the picture was taken, display it on a new screen.
             await Navigator.of(context).push(
               MaterialPageRoute(
@@ -129,11 +135,38 @@ class DisplayPictureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getImageText(imagePath);
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath)),
     );
   }
+}
+
+void getImageText(String path) async {
+  final inputImage = InputImage.fromFilePath(path);
+  final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+  final RecognizedText recognizedText =
+      await textRecognizer.processImage(inputImage);
+
+  String text = recognizedText.text;
+  for (TextBlock block in recognizedText.blocks) {
+    print(block.toString());
+    final Rect rect = block.boundingBox;
+    final List<Point<int>> cornerPoints = block.cornerPoints;
+    final String text = block.text;
+    final List<String> languages = block.recognizedLanguages;
+
+    for (TextLine line in block.lines) {
+      // Same getters as TextBlock
+      print(line.text);
+      for (TextElement element in line.elements) {
+        print(element.text);
+      }
+    }
+  }
+
+  textRecognizer.close();
 }
