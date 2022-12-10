@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// Class
+// StorageItem for StorageService class read/write
 class StorageItem {
   StorageItem(this.key, this.value);
 
@@ -8,6 +8,7 @@ class StorageItem {
   final String value;
 }
 
+// Stores key-value elements (StorageItems)
 class StorageService {
   static final StorageService _storageService = StorageService._internal();
 

@@ -6,6 +6,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:mobile/view/gallery_view.dart';
+import 'package:path/path.dart';
+import 'package:mobile/service/file_io_service.dart';
 
 late final List<CameraDescription> cameras;
 
@@ -16,6 +19,9 @@ Future<void> main() async {
 
   // Obtain a list of the available cameras on the device.
   cameras = await availableCameras();
+
+  // Create scans folder for photos if not exists
+  Directory(await FileIO.localPath('scans')).createSync();
 
   // Get a specific camera from the list of available cameras.
   // final firstCamera = cameras.first;
@@ -76,38 +82,50 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: DropdownButton<CameraDescription>(
-            value: _controller.description,
-            items: widget.cameras.map<DropdownMenuItem<CameraDescription>>(
-                (CameraDescription value) {
-              return DropdownMenuItem<CameraDescription>(
-                value: value,
-                child: Text(value.name),
-              );
-            }).toList(),
-            icon: const Icon(Icons.arrow_downward),
-            elevation: 16,
-            style: const TextStyle(color: Colors.amber),
-            underline: Container(
-              height: 2,
-              color: Colors.amber,
-            ),
-            onChanged: (CameraDescription? value) {
-              // This is called when the user selects an item.
-              changeCamera(value!);
-              // setState(() {
-              // cameraIndex = widget.cameras.indexOf(value!);
-              //   _controller = CameraController(
-              //     // Get a specific camera from the list of available cameras.
-              //     widget.cameras[cameraIndex],
-              //     // Define the resolution to use.
-              //     ResolutionPreset.max,
-              //     enableAudio: false,
-              //   );
-              //   _controller.dispose();
-              //   _initializeControllerFuture = _controller.initialize();
-              // });
-            }),
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          DropdownButton<CameraDescription>(
+              value: _controller.description,
+              items: widget.cameras.map<DropdownMenuItem<CameraDescription>>(
+                  (CameraDescription value) {
+                return DropdownMenuItem<CameraDescription>(
+                  value: value,
+                  child: Text(value.name),
+                );
+              }).toList(),
+              icon: const Icon(Icons.arrow_downward),
+              elevation: 16,
+              style: const TextStyle(color: Colors.amber),
+              underline: Container(
+                height: 2,
+                color: Colors.amber,
+              ),
+              onChanged: (CameraDescription? value) {
+                // This is called when the user selects an item.
+                changeCamera(value!);
+                // setState(() {
+                // cameraIndex = widget.cameras.indexOf(value!);
+                //   _controller = CameraController(
+                //     // Get a specific camera from the list of available cameras.
+                //     widget.cameras[cameraIndex],
+                //     // Define the resolution to use.
+                //     ResolutionPreset.max,
+                //     enableAudio: false,
+                //   );
+                //   _controller.dispose();
+                //   _initializeControllerFuture = _controller.initialize();
+                // });
+              }),
+          TextButton(
+              onPressed: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => GalleryView(),
+                  ),
+                );
+              },
+              child: Icon(Icons.photo)),
+        ]),
       ),
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
@@ -184,18 +202,28 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // getImageText(imagePath);
+    Image img = kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath));
     return Scaffold(
       appBar: AppBar(title: const Text('Display the Picture')),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath)),
+      body: img,
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
             heroTag: 'btn1',
-            onPressed: () {},
+            onPressed: () async {
+              try {
+                String path =
+                    await FileIO.localPath('scans/${basename(imagePath)}');
+                print(path);
+                File(imagePath).copy(path);
+              } catch (_) {
+                print(_.toString());
+              }
+            },
             child: const Icon(Icons.save),
           ),
           FloatingActionButton(
