@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/view/authentication/login_view.dart';
+import 'package:mobile/view/profile/main_profile_view.dart';
+import 'package:mobile/view/profile/receipt_list_view.dart';
 import 'package:mobile/view/test_view.dart';
 
 void main() {
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
     //     body: const MyCustomForm(),
     //   ),
     // );
-    return const MaterialApp(
+    return MaterialApp(
       title: appTitle,
       debugShowCheckedModeBanner: false,
       // home: Scaffold(
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
       //   ),
       //   body: LoginForm(),
       // ),
-      home: LoginView(),
+      home: MainProfileView(),
     );
   }
 }
