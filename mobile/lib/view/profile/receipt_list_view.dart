@@ -1,48 +1,83 @@
-import 'package:camera/camera.dart';
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-import 'package:mobile/view/camera_view.dart';
+import 'package:http/http.dart' as http;
 
-class ReceiptListView extends StatelessWidget {
-  ReceiptListView({Key? key}) : super(key: key);
+import '../../core/model/receipt.dart';
 
-  late List<CameraDescription> _cameras;
-  late CameraDescription _firstCamera;
+class ReceiptListView extends StatefulWidget {
+  const ReceiptListView({super.key});
 
-  void initFunction() async {
-    // Obtain a list of the available cameras on the device.
-    _cameras = await availableCameras();
-    // Get a specific camera from the list of available cameras.
-    final _firstCamera = _cameras.first;
+  @override
+  // ignore: library_private_types_in_public_api
+  _ReceiptListState createState() => _ReceiptListState();
+}
+
+class _ReceiptListState extends State<ReceiptListView> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<List<Receipt>> fetchReceipts() async {
+    var response =
+        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+
+    if (response.statusCode == 200) {
+      List<Receipt> receipts = [];
+
+      List<dynamic> receiptsJson = jsonDecode(response.body);
+
+      receiptsJson.forEach(
+        (oneReceipt) {
+          Receipt album = Receipt.fromJson(oneReceipt);
+          receipts.add(album);
+        },
+      );
+
+      return receipts;
+    } else {
+      // If the call was not successful, throw an error
+      throw Exception('Failed to load users');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Successfully logged in!',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Successfully logged in!'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              const Text('Successfully logged in!'),
-              TextButton(
-                child: const Text(
-                  'Camera',
-                ),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   // MaterialPageRoute(
-                  //       // builder: (context) => CameraView(camera: _firstCamera)),
-                  // );
-                },
-              )
-            ],
-          ),
-        ),
+    // add jwt check
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your receipts'),
       ),
+      body: Center(
+          child: FutureBuilder<List<Receipt>>(
+        future: fetchReceipts(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Receipt>? resData = snapshot.data;
+            return ListView.builder(
+                itemCount: resData != null ? resData.length : 0,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text(resData?[index].name ?? ""),
+                    ),
+                  );
+                });
+          }
+
+          // if (snapshot.hasData) {
+          //   return Text(snapshot.data!.title);
+          // } else if (snapshot.hasError) {
+          //   return Text('${snapshot.error}');
+          // }
+
+          // By default, show a loading spinner.
+          return const CircularProgressIndicator();
+        },
+      )),
     );
   }
 }

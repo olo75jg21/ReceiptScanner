@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     //     body: const MyCustomForm(),
     //   ),
     // );
-    return MaterialApp(
+    return const MaterialApp(
       title: appTitle,
       debugShowCheckedModeBanner: false,
       // home: Scaffold(

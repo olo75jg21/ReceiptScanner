@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/view/profile/receipt_list_view.dart';
 
 import '../test_view.dart';
 
@@ -12,8 +13,8 @@ class MainProfileView extends StatefulWidget {
 
 class _MainProfileState extends State<MainProfileView> {
   void _redirectToReceiptList() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TestView()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const ReceiptListView()));
   }
 
   @override
