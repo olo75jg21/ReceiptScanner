@@ -21,4 +21,21 @@ class HttpClient {
         );
     return response;
   }
+
+  // sends GET request to given route with given body
+  // returns HTTP response
+  static Future<http.Response> get(String route, String body) async {
+    final response = await http
+        .post(
+          Uri.parse('$_url/$route'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: body,
+        )
+        .timeout(
+          _duration,
+        );
+    return response;
+  }
 }

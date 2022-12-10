@@ -10,6 +10,7 @@ import 'package:mobile/product/widget/v1_elevated_button.dart';
 import 'package:mobile/product/widget/v1_text_form_field.dart';
 import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/core/utility/http_client.dart';
+import 'package:mobile/service/storage_service.dart';
 import 'package:mobile/view/authentication/register_view.dart';
 import 'package:mobile/view/test_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -69,8 +70,8 @@ class LoginViewState extends State<LoginView> {
             Text(
               body['message'],
             ));
-        secureStorage.write(key: 'jwt', value: body['token']);
-        secureStorage.write(key: 'usr', value: body['id']);
+        StorageService.writeSecureData(StorageItem('jwt', body['token']));
+        StorageService.writeSecureData(StorageItem('user', body['id']));
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => TestView()),

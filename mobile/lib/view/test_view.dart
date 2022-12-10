@@ -1,19 +1,7 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/view/camera_view.dart';
 
 class TestView extends StatelessWidget {
-  TestView({Key? key}) : super(key: key);
-
-  late List<CameraDescription> _cameras;
-  late CameraDescription _firstCamera;
-
-  void initFunction() async {
-    // Obtain a list of the available cameras on the device.
-    _cameras = await availableCameras();
-    // Get a specific camera from the list of available cameras.
-    final _firstCamera = _cameras.first;
-  }
+  const TestView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
