@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 import 'package:mobile/core/constant/app_text.dart';
-import 'package:mobile/core/utility/secure_storage.dart';
 import 'package:mobile/core/utility/validator.dart';
 import 'package:mobile/product/widget/v1_container.dart';
 import 'package:mobile/product/widget/v1_elevated_button.dart';
