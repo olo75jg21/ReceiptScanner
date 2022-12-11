@@ -23,6 +23,83 @@ const show = (req, res, next) => {
         options.pagination = false
     }
 
+    // Temporary code to test
+    res.send([{
+        "_id": "6390d6e6702dc655aa70ba3c",
+        "userId": "638f9860688bf896fec35464",
+        "shop": "zabka",
+        "price": 120,
+        "receiptItems": [
+            {
+                "name": "snickers",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 2,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3d"
+            },
+            {
+                "name": "lizak",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 1,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3e"
+            },
+            {
+                "name": "prince",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 1.5,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3f"
+            }
+        ],
+        "data": "2022-12-07T18:09:42.981Z",
+        "createdAt": "2022-12-07T18:09:42.987Z",
+        "updatedAt": "2022-12-07T18:09:42.987Z",
+        "__v": 0
+    }, {
+        "_id": "6390d6e6702dc655aa70ba3c",
+        "userId": "638f9860688bf896fec35464",
+        "shop": "zabka",
+        "price": 120,
+        "receiptItems": [
+            {
+                "name": "snickers",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 2,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3d"
+            },
+            {
+                "name": "lizak",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 1,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3e"
+            },
+            {
+                "name": "prince",
+                "unit": ".szt",
+                "amount": 1,
+                "priceInvidual": 1.5,
+                "category": "slodycze",
+                "_id": "6390d6e6702dc655aa70ba3f"
+            }
+        ],
+        "data": "2022-12-07T18:09:42.981Z",
+        "createdAt": "2022-12-07T18:09:42.987Z",
+        "updatedAt": "2022-12-07T18:09:42.987Z",
+        "__v": 0
+    }]);
+
+    return;
+
+    // End of temporary code
+
     Receipt.paginate({ userId: ObjectId }, options, { "__v": 0, "createdAt": 0, "updatedAt": 0 })
         .then(response => {
             if (response) {

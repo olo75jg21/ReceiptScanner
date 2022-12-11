@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,28 +15,26 @@ class ReceiptListView extends StatefulWidget {
 }
 
 class _ReceiptListState extends State<ReceiptListView> {
+  String userId = "6395ec2a0e9d4e3f03aee8fc";
+  late Future<List<Receipt>> futureReceipts;
+
   @override
   void initState() {
     super.initState();
+    futureReceipts = fetchReceipts();
   }
 
   Future<List<Receipt>> fetchReceipts() async {
     var response =
-        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+        await http.get(Uri.parse("http://10.0.2.2:3000/receipt/$userId"));
+
+    print("XD");
+    print(response.body);
 
     if (response.statusCode == 200) {
-      List<Receipt> receipts = [];
+      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
 
-      List<dynamic> receiptsJson = jsonDecode(response.body);
-
-      receiptsJson.forEach(
-        (oneReceipt) {
-          Receipt album = Receipt.fromJson(oneReceipt);
-          receipts.add(album);
-        },
-      );
-
-      return receipts;
+      return parsed.map<Receipt>((json) => Receipt.fromMap(json)).toList();
     } else {
       // If the call was not successful, throw an error
       throw Exception('Failed to load users');
@@ -51,33 +49,44 @@ class _ReceiptListState extends State<ReceiptListView> {
       appBar: AppBar(
         title: const Text('Your receipts'),
       ),
-      body: Center(
-          child: FutureBuilder<List<Receipt>>(
-        future: fetchReceipts(),
+      body: FutureBuilder<List<Receipt>>(
+        future: futureReceipts,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<Receipt>? resData = snapshot.data;
             return ListView.builder(
-                itemCount: resData != null ? resData.length : 0,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text(resData?[index].name ?? ""),
-                    ),
-                  );
-                });
+              itemCount: snapshot.data!.length,
+              itemBuilder: (_, index) => Container(
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xff97FFFF),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        snapshot.data![index].id,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(snapshot.data![index].shop),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
           }
-
-          // if (snapshot.hasData) {
-          //   return Text(snapshot.data!.title);
-          // } else if (snapshot.hasError) {
-          //   return Text('${snapshot.error}');
-          // }
-
-          // By default, show a loading spinner.
-          return const CircularProgressIndicator();
         },
-      )),
+      ),
     );
   }
 }

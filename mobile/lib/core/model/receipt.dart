@@ -1,15 +1,23 @@
+import 'dart:convert';
+
+List<Receipt> receiptFromJson(String str) =>
+    List<Receipt>.from(json.decode(str).map((x) => Receipt.fromMap(x)));
+
 class Receipt {
-  final int id;
-  final String name;
-  final String email;
+  String id;
+  String userId;
+  String shop;
+  int price;
 
-  Receipt({required this.id, required this.name, required this.email});
+  Receipt(
+      {required this.id,
+      required this.userId,
+      required this.shop,
+      required this.price});
 
-  factory Receipt.fromJson(Map<String, dynamic> json) {
-    return Receipt(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-    );
-  }
+  factory Receipt.fromMap(Map<String, dynamic> json) => Receipt(
+      id: json['_id'],
+      userId: json['userId'],
+      shop: json['shop'],
+      price: json['price']);
 }
