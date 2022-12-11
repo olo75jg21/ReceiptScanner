@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_size_getter/file_input.dart';
 import 'package:image_size_getter/image_size_getter.dart';
 import 'package:mobile/service/file_io_service.dart';
+import 'package:mobile/service/text_scanner_service.dart';
 import 'package:path/path.dart';
 
 class GalleryView extends StatelessWidget {
@@ -13,7 +14,6 @@ class GalleryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scans gallery'),
@@ -44,7 +44,9 @@ class GalleryView extends StatelessWidget {
                 return IconButton(
                   icon: Ink.image(image: image.image, fit: BoxFit.cover),
                   // iconSize: 500,
-                  onPressed: () {},
+                  onPressed: () {
+                    TextScanner.printImageText(img.path);
+                  },
                 );
                 // );
                 // return IconButton(
