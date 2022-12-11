@@ -33,7 +33,7 @@ class Receipt {
     if (json['receiptItems'] != null) {
       receiptItems = <ReceiptItem>[];
       json['receiptItems'].forEach((v) {
-        receiptItems!.add(new ReceiptItem.fromJson(v));
+        receiptItems!.add(ReceiptItem.fromJson(v));
       });
     }
     data = json['data'];
@@ -43,18 +43,18 @@ class Receipt {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['userId'] = this.userId;
-    data['shop'] = this.shop;
-    data['price'] = this.price;
-    if (this.receiptItems != null) {
-      data['receiptItems'] = this.receiptItems!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['userId'] = userId;
+    data['shop'] = shop;
+    data['price'] = price;
+    if (receiptItems != null) {
+      data['receiptItems'] = receiptItems!.map((v) => v.toJson()).toList();
     }
     data['data'] = this.data;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 

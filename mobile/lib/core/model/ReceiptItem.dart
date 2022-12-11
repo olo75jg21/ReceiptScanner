@@ -24,13 +24,13 @@ class ReceiptItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['unit'] = this.unit;
-    data['amount'] = this.amount;
-    data['priceInvidual'] = this.priceInvidual;
-    data['category'] = this.category;
-    data['_id'] = this.sId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['unit'] = unit;
+    data['amount'] = amount;
+    data['priceInvidual'] = priceInvidual;
+    data['category'] = category;
+    data['_id'] = sId;
     return data;
   }
 }

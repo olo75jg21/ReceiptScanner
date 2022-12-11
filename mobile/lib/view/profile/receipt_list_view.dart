@@ -1,6 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:mobile/core/constant/app_color.dart';
 
 import '../../core/model/receipt.dart';
 
@@ -28,6 +27,7 @@ class _ReceiptListState extends State<ReceiptListView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your receipts'),
+        backgroundColor: AppColors.loginColor,
       ),
       body: FutureBuilder<List<Receipt>>(
         future: futureReceipts,
@@ -41,7 +41,8 @@ class _ReceiptListState extends State<ReceiptListView> {
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   padding: const EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xff97FFFF),
+                    // color: const Color(0xff97FFFF),
+                    border: Border.all(color: AppColors.loginColor, width: 2),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: Column(
