@@ -31,7 +31,7 @@ class _ReceiptListState extends State<ReceiptListView> {
       final parsed = json.decode(response.body);
 
       return parsed['response']['docs']
-          .map<Receipt>((json) => Receipt.fromMap(json))
+          .map<Receipt>((json) => Receipt.fromJson(json))
           .toList();
     } else {
       // If the call was not successful, throw an error
@@ -67,14 +67,14 @@ class _ReceiptListState extends State<ReceiptListView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${snapshot.data![index].id}",
+                        snapshot.data![index].sId.toString(),
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text("${snapshot.data![index].shop}"),
+                      Text(snapshot.data![index].shop.toString()),
                     ],
                   ),
                 ),
