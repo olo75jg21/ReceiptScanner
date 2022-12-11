@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,13 +27,12 @@ class _ReceiptListState extends State<ReceiptListView> {
     var response =
         await http.get(Uri.parse("http://10.0.2.2:3000/receipt/$userId"));
 
-    print("XD");
-    print(response.body);
-
     if (response.statusCode == 200) {
-      final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+      final parsed = json.decode(response.body);
 
-      return parsed.map<Receipt>((json) => Receipt.fromMap(json)).toList();
+      return parsed['response']['docs']
+          .map<Receipt>((json) => Receipt.fromMap(json))
+          .toList();
     } else {
       // If the call was not successful, throw an error
       throw Exception('Failed to load users');
@@ -69,14 +67,14 @@ class _ReceiptListState extends State<ReceiptListView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        snapshot.data![index].id,
+                        "${snapshot.data![index].id}",
                         style: const TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(snapshot.data![index].shop),
+                      Text("${snapshot.data![index].shop}"),
                     ],
                   ),
                 ),
