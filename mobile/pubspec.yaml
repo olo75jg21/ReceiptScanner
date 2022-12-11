@@ -50,6 +50,7 @@ dependencies:
   intl: ^0.17.0
   mime: ^1.0.3
   image_size_getter: ^2.1.2
+  string_similarity: ^2.0.0
 
 dev_dependencies:
   flutter_test:
