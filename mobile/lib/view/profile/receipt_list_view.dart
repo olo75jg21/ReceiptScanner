@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 import '../../core/model/receipt.dart';
 
@@ -14,29 +13,12 @@ class ReceiptListView extends StatefulWidget {
 }
 
 class _ReceiptListState extends State<ReceiptListView> {
-  String userId = "6395ec2a0e9d4e3f03aee8fc";
   late Future<List<Receipt>> futureReceipts;
 
   @override
   void initState() {
     super.initState();
-    futureReceipts = fetchReceipts();
-  }
-
-  Future<List<Receipt>> fetchReceipts() async {
-    var response =
-        await http.get(Uri.parse("http://10.0.2.2:3000/receipt/$userId"));
-
-    if (response.statusCode == 200) {
-      final parsed = json.decode(response.body);
-
-      return parsed['response']['docs']
-          .map<Receipt>((json) => Receipt.fromJson(json))
-          .toList();
-    } else {
-      // If the call was not successful, throw an error
-      throw Exception('Failed to load users');
-    }
+    futureReceipts = Receipt.fetchReceipts();
   }
 
   @override
