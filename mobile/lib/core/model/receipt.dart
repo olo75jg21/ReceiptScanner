@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:mobile/core/model/ReceiptItem.dart';
+import 'package:mobile/core/model/receiptItem.dart';
 
 class Receipt {
   String? sId;

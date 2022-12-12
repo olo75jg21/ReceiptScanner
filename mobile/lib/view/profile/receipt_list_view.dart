@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/core/constant/app_color.dart';
+import 'package:mobile/view/profile/receipt_details_view.dart';
 
 import '../../core/model/receipt.dart';
 
@@ -35,7 +36,14 @@ class _ReceiptListState extends State<ReceiptListView> {
           if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.length,
-              itemBuilder: (_, index) => Container(
+              itemBuilder: (_, index) => InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReceiptDetailView(
+                              receipt: snapshot.data![index])));
+                },
                 child: Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -47,17 +55,23 @@ class _ReceiptListState extends State<ReceiptListView> {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        snapshot.data![index].sId.toString(),
+                        snapshot.data![index].shop.toString().toUpperCase(),
                         style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 10),
-                      Text(snapshot.data![index].shop.toString()),
+                      Text(snapshot.data![index].createdAt.toString()),
+                      const SizedBox(height: 10),
+                      Text(
+                        "${snapshot.data![index].price}zl",
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      )
                     ],
                   ),
                 ),
