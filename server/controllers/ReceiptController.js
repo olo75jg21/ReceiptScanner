@@ -9,8 +9,8 @@ const show = (req, res, next) => {
     try {
         ObjectId = mongoose.Types.ObjectId(req.params.userId)
     } catch (error) {
-        res.status(500).json({
-            message: 'Internal server error'
+        res.status(404).json({
+            message: 'Resource was not found'
         })
     }
 
@@ -30,8 +30,8 @@ const show = (req, res, next) => {
                     response
                 })
             } else {
-                res.status(204).json({
-                    message: 'User does not have any receipts'
+                res.status(404).json({
+                    message: "You don't have any receipts yet"
                 })
             }
         })
@@ -48,8 +48,8 @@ const store = (req, res, next) => {
     try {
         ObjectId = mongoose.Types.ObjectId(req.params.userId)
     } catch (error) {
-        res.json({
-            message: 'Wrong user id'
+        res.status(404).json({
+            message: 'Resource was not found'
         })
     }
 
@@ -62,53 +62,78 @@ const store = (req, res, next) => {
     })
     receipt.save()
         .then(response => {
-            res.json({
-                message: "Receipt added"
+            res.status(201).json({
+                message: "Receipt was added successfully"
             })
         })
         .catch(error => {
-            res.json({
-                message: 'An error occured'
+            res.status(500).json({
+                message: 'Internal server error'
             })
         })
 }
 
 
 const update = (req, res, next) => {
-    let receiptId = req.params.receiptId
+
+    var receiptId
+    try {
+        receiptId = mongoose.Types.ObjectId(req.params.receiptId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
 
     Receipt.findByIdAndUpdate(receiptId, { $set: { data: req.body.data, shop: req.body.shop, price: req.body.price } })
         .then(() => {
-            res.json({
-                message: 'Receipt informations updated'
+            res.status(200).json({
+                message: "Receipt informations was updated successfully"
             })
         })
         .catch(error => {
-            res.json({
-                message: 'Receipt Id does not exist'
+            res.status(500).json({
+                message: "Internal server error"
             })
         })
 }
 
-
 const destroy = (req, res, next) => {
-    let receiptId = req.params.receiptId
+
+    var receiptId
+    try {
+        receiptId = mongoose.Types.ObjectId(req.params.receiptId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
 
     Receipt.findByIdAndRemove(receiptId)
         .then(() => {
-            res.json({
-                message: 'Receipt deleted'
+            res.status(200).json({
+                message: 'Receipt was deleted successfully'
             })
         })
         .catch(error => {
-            res.json({
-                message: 'Receipt id does not exist'
+            res.status(500).json({
+                message: 'Internal server error'
             })
         })
 }
 
 const storeItem = (req, res, next) => {
-    Receipt.updateOne({ _id: req.params.receiptId }, {
+
+    var receiptId
+    try {
+        receiptId = mongoose.Types.ObjectId(req.params.receiptId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
+
+    Receipt.updateOne({ _id: receiptId }, {
         $push: {
             receiptItems: {
                 name: req.body.name, unit: req.body.unit,
@@ -117,20 +142,38 @@ const storeItem = (req, res, next) => {
         }
     })
         .then(() => {
-            res.json({
-                message: 'Item was added to receipt',
+            res.status(200).json({
+                message: 'Item was added to receipt successfully',
             })
         })
         .catch(error => {
-            res.json({
-                message: 'Receipt id does not exist',
+            res.status(500).json({
+                message: 'Internal server error',
             })
         })
 }
 
 const updateItem = (req, res, next) => {
 
-    Receipt.updateOne({ _id: req.params.receiptId, "receiptItems._id": req.params.itemId }, {
+    var receiptId
+    try {
+        receiptId = mongoose.Types.ObjectId(req.params.receiptId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
+
+    var itemId
+    try {
+        itemId = mongoose.Types.ObjectId(req.params.itemId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
+
+    Receipt.updateOne({ _id: receiptId, "receiptItems._id": itemId }, {
         $set:
         {
             "receiptItems.$.name": req.body.name,
@@ -141,27 +184,46 @@ const updateItem = (req, res, next) => {
         }
     })
         .then(() => {
-            res.json({
-                message: 'Item updated',
+            res.status(200).json({
+                message: 'Item was updated successfully',
             })
         })
         .catch(error => {
-            res.json({
-                message: 'Receipt id or Item id does not exist',
+            res.status(500).json({
+                message: 'Internal server error',
             })
         })
 }
 
 const destroyItem = (req, res, next) => {
-    Receipt.updateOne({ _id: req.params.receiptId }, { $pull: { receiptItems: { _id: req.params.itemId } } })
+
+    var receiptId
+    try {
+        receiptId = mongoose.Types.ObjectId(req.params.receiptId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
+
+    var itemId
+    try {
+        itemId = mongoose.Types.ObjectId(req.params.itemId)
+    } catch (error) {
+        res.status(404).json({
+            message: 'Resource was not found'
+        })
+    }
+
+    Receipt.updateOne({ _id: receiptId }, { $pull: { receiptItems: { _id: itemId } } })
         .then(() => {
-            res.json({
-                message: 'Item removed from receipt',
+            res.status(200).json({
+                message: 'Item was removed from receipt successfully',
             })
         })
         .catch(error => {
-            res.json({
-                message: 'Receipt id or Item id does not exist',
+            res.status(404).json({
+                message: 'Internal server error',
             })
         })
 }
