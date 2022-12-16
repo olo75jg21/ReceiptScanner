@@ -135,9 +135,10 @@ Dodanie paragonu
 ```
 
 ### Możliwe odpowiedzi 
-* 'Wrong user id'
-* "Receipt added"
-* 'An error occured'<br/><br/>
+* <font color="green"> Status 201 </font> "Receipt added"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found"
+* <font color="red"> Status 500 </font> "Internal server error" <br/><br/>
 
 # GET /receipt/{idUzytkownika}?page={pageNumber}&limit={amountOfRecordsPerPage}
 ```JSON
@@ -541,21 +542,27 @@ ukryte pola "__v", "createdAt" oraz "updatedAt"
 
 ### Możliwe odpowiedzi 
 * <font color="green"> Status 200 </font> Zwróci plik Json jak w przykładach powyżej
-* <font color="green"> Status 204 </font> "User does not have any receipts"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "You don't have any receipts yet"
+* <font color="red"> Status 404 </font> "Resource was not found"
 * <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # DELETE /receipt/{idParagonu}
  Usuniecie paragonu
 ### Możliwe odpowiedzi 
-* 'Receipt deleted'
-* 'Receipt id does not exist'<br/><br/>
+* <font color="green"> Status 200 </font> "Receipt was deleted successfully"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found"
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # DELETE /receipt/{idParagonu}/item/{idPrzedmiotu}
 Usuniecie przedmiotu z paragonu
 
 ### Możliwe odpowiedzi 
-* 'Item removed from receipt',
-* 'Receipt id or Item id does not exist'<br/><br/>
+* <font color="green"> Status 200 </font> "Item was removed from receipt successfully"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found"
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # POST /receipt/item/{idParagonu}
 Dodanie przedmiotu do paragonu
@@ -570,8 +577,10 @@ Dodanie przedmiotu do paragonu
 ```
 
 ### Możliwe odpowiedzi 
-* 'Item was added to receipt',
-* 'Receipt id does not exist'<br/><br/>
+* <font color="green"> Status 200 </font> "Item was added to receipt successfully"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found" 
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # PATCH /receipt/{idParagonu}
 Aktualizacja paragonu
@@ -584,8 +593,10 @@ Aktualizacja paragonu
 ```
 
 ### Możliwe odpowiedzi 
-* 'Receipt informations updated'
-* 'Receipt id does not exist'<br/><br/>
+* <font color="green"> Status 200 </font> "Receipt informations was updated successfully"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found" 
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # PATCH /receipt/{idParagonu}/item/{idPrzedmiotu}
 Aktualizacja przedmiotu w danym paraganie
@@ -600,8 +611,10 @@ Aktualizacja przedmiotu w danym paraganie
 ```
 
 ### Możliwe odpowiedzi 
-* 'Item updated'
-* 'Receipt id or item id does not exist'
+* <font color="green"> Status 200 </font> "Item was updated successfully"
+* <font color="red"> Status 401 </font> "Authentication failed"
+* <font color="red"> Status 404 </font> "Resource was not found"
+* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 
 
