@@ -19,9 +19,8 @@ class User {
   }
 
   static Future<User> registerUser(Map<String, dynamic> credentials) async {
-    http.Response response = await HttpClient.post(
-        'register',
-        jsonEncode(<String, String>{
+    http.Response response = await HttpClient.post('register',
+        body: jsonEncode(<String, String>{
           'username':
               '${credentials['first_name']} ${credentials['last_name']}',
           'email': credentials['email'],

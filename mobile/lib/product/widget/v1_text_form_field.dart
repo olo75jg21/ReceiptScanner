@@ -26,7 +26,7 @@ class V1TextFormField extends StatelessWidget {
         obscureText: obscureText,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          errorMaxLines: 3,
+          errorMaxLines: 1,
           prefixIcon: prefixIcon,
           suffixIcon: suffixIcon,
           hintText: hinttext,

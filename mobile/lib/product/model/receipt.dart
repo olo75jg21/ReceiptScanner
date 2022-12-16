@@ -1,17 +1,8 @@
-<<<<<<< HEAD:mobile/lib/product/model/receipt.dart
 import 'dart:convert';
 
 import 'package:mobile/product/model/receipt_item.dart';
-
-class Receipt {
-  // List<ReceiptItem> items;
-  // num total;
-}
-=======
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-import 'package:mobile/core/model/receiptItem.dart';
+import 'package:mobile/core/utility/http_client.dart';
+import 'package:mobile/service/storage_service.dart';
 
 class Receipt {
   String? sId;
@@ -69,10 +60,14 @@ class Receipt {
   }
 
   static Future<List<Receipt>> fetchReceipts() async {
-    String userId = "6395ec2a0e9d4e3f03aee8fc";
+    String userId = (await StorageService.readSecureData('user'))!;
+    String token = (await StorageService.readSecureData('jwt'))!;
 
     var response =
-        await http.get(Uri.parse("http://10.0.2.2:3000/receipt/$userId"));
+        await HttpClient.get('receipt/$userId', headers: {'token': token});
+    print(response.statusCode);
+    print(userId);
+    print(token);
 
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
@@ -86,4 +81,3 @@ class Receipt {
     }
   }
 }
->>>>>>> receipt_list:mobile/lib/core/model/receipt.dart

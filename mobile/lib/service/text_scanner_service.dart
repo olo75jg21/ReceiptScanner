@@ -10,7 +10,6 @@ class TextScanner {
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     final RecognizedText recognizedText =
         await textRecognizer.processImage(inputImage);
-
     // String text = recognizedText.text;
     String header = "";
     bool wasHeader = false;

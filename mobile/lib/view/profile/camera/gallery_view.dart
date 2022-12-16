@@ -1,11 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_size_getter/file_input.dart';
-import 'package:image_size_getter/image_size_getter.dart';
+import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/service/file_io_service.dart';
 import 'package:mobile/service/text_scanner_service.dart';
-import 'package:path/path.dart';
 
 class GalleryView extends StatelessWidget {
   const GalleryView({Key? key}) : super(key: key);
@@ -15,7 +13,9 @@ class GalleryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.loginColor,
       appBar: AppBar(
+        backgroundColor: AppColors.loginColor,
         title: const Text('Scans gallery'),
       ),
       body: FutureBuilder<List<FileSystemEntity>>(
@@ -43,7 +43,7 @@ class GalleryView extends StatelessWidget {
                 // return image;
                 return IconButton(
                   icon: Ink.image(image: image.image, fit: BoxFit.cover),
-                  // iconSize: 500,
+                  iconSize: 500,
                   onPressed: () {
                     TextScanner.printImageText(img.path);
                   },

@@ -1,62 +1,32 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:mobile/view/gallery_view.dart';
+import 'package:mobile/core/constant/app_color.dart';
+import 'package:mobile/view/profile/camera/gallery_view.dart';
 import 'package:path/path.dart';
 import 'package:mobile/service/file_io_service.dart';
 
-late final List<CameraDescription> cameras;
-
-Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Obtain a list of the available cameras on the device.
-  cameras = await availableCameras();
-
-  // Create scans folder for photos if not exists
-  Directory(await FileIO.localPath('scans')).createSync();
-
-  // Get a specific camera from the list of available cameras.
-  // final firstCamera = cameras.first;
-
-  runApp(
-    MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        cameras: cameras,
-      ),
-    ),
-  );
-}
-
 // A screen that allows users to take a picture using a given camera.
-class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    super.key,
-    required this.cameras,
-  });
+class CameraView extends StatefulWidget {
+  const CameraView({super.key, required this.cameras});
 
   final List<CameraDescription> cameras;
 
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
+  CameraViewState createState() => CameraViewState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen> {
+class CameraViewState extends State<CameraView> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
     super.initState();
+
     // To display the current output from the Camera,
     // create a CameraController.
     _controller = CameraController(
@@ -81,7 +51,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.loginColor,
+
       appBar: AppBar(
+        backgroundColor: AppColors.loginColor,
         title:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           DropdownButton<CameraDescription>(
@@ -204,7 +177,11 @@ class DisplayPictureScreen extends StatelessWidget {
     // getImageText(imagePath);
     Image img = kIsWeb ? Image.network(imagePath) : Image.file(File(imagePath));
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      backgroundColor: AppColors.loginColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.loginColor,
+        title: const Text('Display the Picture'),
+      ),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: img,
@@ -229,11 +206,12 @@ class DisplayPictureScreen extends StatelessWidget {
           FloatingActionButton(
               heroTag: 'btn2',
               onPressed: () async {
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => TakePictureScreen(cameras: cameras),
-                  ),
-                );
+                await availableCameras().then((value) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CameraView(cameras: value),
+                      ),
+                    ));
               },
               child: const Icon(Icons.cancel))
         ],

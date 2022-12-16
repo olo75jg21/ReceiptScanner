@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:kartal/kartal.dart';
@@ -35,12 +36,14 @@ class RegisterViewState extends State<RegisterView> {
   late String _confirmPassword;
   late bool _confirmPasswordVisible;
   late bool _passwordVisible;
+  late bool _isButtonDisabled;
 
   @override
   void initState() {
     super.initState();
     _confirmPasswordVisible = false;
     _passwordVisible = false;
+    _isButtonDisabled = false;
   }
 
   void showAlert(Color backgroundColor, Widget content) {
@@ -62,19 +65,41 @@ class RegisterViewState extends State<RegisterView> {
       // Send login request.
       await HttpClient.post(
         'register',
-        jsonEncode(<String, String>{'email': _email, 'password': _password}),
+        body: jsonEncode(
+            <String, String>{'email': _email, 'password': _password}),
       ).then((response) {
-        showAlert(
-            response.statusCode == 201 ? AppColors.success : AppColors.error,
-            Text(
-              jsonDecode(response.body)['message'].toString(),
-            ));
+        final body = jsonDecode(response.body);
+
+        if (response.statusCode == 201) {
+          AnimatedSnackBar.material(
+            body['message'],
+            type: AnimatedSnackBarType.success,
+            duration: const Duration(seconds: 3),
+          ).show(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginView()),
+          );
+        } else {
+          AnimatedSnackBar.material(
+            body['message'],
+            type: AnimatedSnackBarType.error,
+            duration: const Duration(seconds: 3),
+          ).show(context);
+        }
       }).catchError(
-        (e) {
-          showAlert(AppColors.error, const Text(AppText.serverConnectionError));
+        (_) {
+          AnimatedSnackBar.material(
+            AppText.serverConnectionError,
+            type: AnimatedSnackBarType.error,
+            duration: const Duration(seconds: 3),
+          ).show(context);
         },
       );
     }
+    setState(() {
+      _isButtonDisabled = false;
+    });
   }
 
   @override
@@ -135,7 +160,7 @@ class RegisterViewState extends State<RegisterView> {
                   ),
                   validator: (value) {
                     _confirmPassword = value;
-                    Validator.password(value);
+                    return Validator.password(value);
                   },
                   onSaved: (value) => _password = value,
                 ),
@@ -173,10 +198,17 @@ class RegisterViewState extends State<RegisterView> {
                 child: V1ElevatedButton(
                   borderRadius: 20,
                   color: AppColors.loginColor,
-                  onPressed: () => submitForm(),
-                  child: const Text(
-                    AppText.registernow,
-                    style: TextStyle(color: Colors.white),
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () {
+                          setState(() {
+                            _isButtonDisabled = true;
+                          });
+                          submitForm();
+                        },
+                  child: Text(
+                    AppText.registernow.toUpperCase(),
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),

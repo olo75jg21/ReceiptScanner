@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:mobile/view/authentication/login_view.dart';
-import 'package:mobile/view/profile/main_profile_view.dart';
-import 'package:mobile/view/profile/receipt_list_view.dart';
-import 'package:mobile/view/test_view.dart';
+import 'dart:io';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:mobile/service/file_io_service.dart';
+import 'package:mobile/view/authentication/login_view.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Directory(await FileIO.localPath('scans')).createSync();
+
   runApp(const MyApp());
 }
 
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
       //   ),
       //   body: LoginForm(),
       // ),
-      home: MainProfileView(),
+      home: LoginView(),
     );
   }
 }

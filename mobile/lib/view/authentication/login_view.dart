@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
 import 'package:mobile/core/constant/app_text.dart';
@@ -11,6 +12,7 @@ import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/core/utility/http_client.dart';
 import 'package:mobile/service/storage_service.dart';
 import 'package:mobile/view/authentication/register_view.dart';
+import 'package:mobile/view/profile/main_profile_view.dart';
 import 'package:mobile/view/test_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -35,11 +37,13 @@ class LoginViewState extends State<LoginView> {
   late String _email;
   late String _password;
   late bool _passwordVisible;
+  late bool _isButtonDisabled;
 
   @override
   void initState() {
     super.initState();
     _passwordVisible = false;
+    _isButtonDisabled = false;
   }
 
   void showAlert(Color backgroundColor, Widget content) {
@@ -61,28 +65,48 @@ class LoginViewState extends State<LoginView> {
       // Send login request.
       await HttpClient.post(
         'login',
-        jsonEncode(<String, String>{'email': _email, 'password': _password}),
+        body: jsonEncode(
+            <String, String>{'email': _email, 'password': _password}),
       ).then((response) {
-        dynamic body = jsonDecode(response.body);
-        showAlert(
-            response.statusCode == 200 ? AppColors.success : AppColors.error,
-            Text(
-              body['message'],
-            ));
-        StorageService.writeSecureData(StorageItem('jwt', body['token']));
-        StorageService.writeSecureData(StorageItem('user', body['id']));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => TestView()),
-        );
+        final body = jsonDecode(response.body);
+
+        if (response.statusCode == 200) {
+          AnimatedSnackBar.material(
+            body['message'],
+            type: AnimatedSnackBarType.success,
+            duration: const Duration(seconds: 3),
+          ).show(context);
+          StorageService.writeSecureData(StorageItem('jwt', body['token']));
+          StorageService.writeSecureData(StorageItem('user', body['id']));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const MainProfileView()),
+          );
+        } else {
+          AnimatedSnackBar.material(
+            body['message'],
+            type: AnimatedSnackBarType.error,
+            duration: const Duration(seconds: 3),
+            // mobileSnackBarPosition: MobileSnackBarPosition.top,
+          ).show(context);
+          // showAlert(
+          //     AppColors.error,
+          //     Text(
+          //       body['message'],
+          //     ));
+        }
       }).catchError((_) {
-        showAlert(
-          AppColors.error,
-          const Text(AppText.serverConnectionError),
-        );
-        return null;
+        AnimatedSnackBar.material(
+          AppText.serverConnectionError,
+          type: AnimatedSnackBarType.error,
+          duration: const Duration(seconds: 3),
+        ).show(context);
       });
     }
+
+    setState(() {
+      _isButtonDisabled = false;
+    });
   }
 
   @override
@@ -116,7 +140,7 @@ class LoginViewState extends State<LoginView> {
                     Icons.email,
                     color: AppColors.loginColor,
                   ),
-                  validator: (value) => Validator.email(value),
+                  // validator: (value) => Valaidator.email(value),
                   onSaved: (value) => _email = value,
                 ),
               ),
@@ -175,7 +199,14 @@ class LoginViewState extends State<LoginView> {
                 child: V1ElevatedButton(
                   borderRadius: 20,
                   color: AppColors.loginColor,
-                  onPressed: () => submitForm(),
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () {
+                          setState(() {
+                            _isButtonDisabled = true;
+                          });
+                          submitForm();
+                        },
                   child: Text(
                     AppText.login.toUpperCase(),
                     style: const TextStyle(color: Colors.white),

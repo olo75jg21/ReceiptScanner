@@ -1,6 +1,6 @@
-import 'package:mobile/core/model/receipt.dart';
 import 'package:flutter/material.dart';
 
+import 'package:mobile/product/model/receipt.dart';
 import '../../core/constant/app_color.dart';
 
 class ReceiptDetailView extends StatefulWidget {

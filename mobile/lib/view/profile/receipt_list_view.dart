@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/core/constant/app_color.dart';
 import 'package:mobile/view/profile/receipt_details_view.dart';
 
-import '../../core/model/receipt.dart';
+import 'package:mobile/product/model/receipt.dart';
 
 class ReceiptListView extends StatefulWidget {
   const ReceiptListView({super.key});
