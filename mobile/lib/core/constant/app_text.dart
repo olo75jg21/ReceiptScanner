@@ -23,4 +23,9 @@ class AppText {
   static const String invalidConfirmPassword =
       "The given passwords do not match.";
   static const String notEmptyField = "The field above cannot be empty.";
+
+  static const String errorOCR =
+      "Receipt scan failed. Please make a new photo.";
+
+  static const String save = "Save";
 }

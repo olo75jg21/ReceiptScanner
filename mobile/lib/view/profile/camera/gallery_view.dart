@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/core/constant/app_color.dart';
+import 'package:mobile/core/constant/app_text.dart';
 import 'package:mobile/service/file_io_service.dart';
 import 'package:mobile/service/text_scanner_service.dart';
 
@@ -44,8 +46,17 @@ class GalleryView extends StatelessWidget {
                 return IconButton(
                   icon: Ink.image(image: image.image, fit: BoxFit.cover),
                   iconSize: 500,
-                  onPressed: () {
-                    TextScanner.printImageText(img.path);
+                  onPressed: () async {
+                    try {
+                      await TextScanner.printImageText2(context, img.path);
+                    } catch (_) {
+                      AnimatedSnackBar.material(
+                        AppText.errorOCR,
+                        type: AnimatedSnackBarType.error,
+                        duration: const Duration(seconds: 4),
+                        // mobileSnackBarPosition: MobileSnackBarPosition.top,
+                      ).show(context);
+                    }
                   },
                 );
                 // );

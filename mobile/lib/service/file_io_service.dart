@@ -8,7 +8,7 @@ class FileIO {
       getApplicationDocumentsDirectory();
 
   static Future<String> localPath(String path) async {
-    return '${(await _localDirectory)!.path}/$path';
+    return '${(await _localDirectory).path}/$path';
   }
 
   static Future<File> localFile(String path) async {

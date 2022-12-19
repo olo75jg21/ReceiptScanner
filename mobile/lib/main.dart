@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobile/service/file_io_service.dart';
 import 'package:mobile/view/authentication/login_view.dart';
+import 'package:mobile/view/profile/main_profile_view.dart';
+import 'package:mobile/view/test_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
       //   ),
       //   body: LoginForm(),
       // ),
-      home: LoginView(),
+      home: MainProfileView(),
     );
   }
 }

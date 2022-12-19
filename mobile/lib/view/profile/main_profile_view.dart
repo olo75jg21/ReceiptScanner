@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/view/profile/camera/gallery_view.dart';
 import 'package:mobile/view/profile/receipt_list_view.dart';
 import 'package:mobile/view/profile/camera/camera_view.dart';
 
@@ -17,6 +18,11 @@ class _MainProfileState extends State<MainProfileView> {
   void _redirectToReceiptList() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const ReceiptListView()));
+  }
+
+  void _redirectToGallery() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const GalleryView()));
   }
 
   Future<void> _redirectToCamera() async {
@@ -42,6 +48,10 @@ class _MainProfileState extends State<MainProfileView> {
             TextButton(
               onPressed: _redirectToCamera,
               child: const Text('Camera'),
+            ),
+            TextButton(
+              onPressed: _redirectToGallery,
+              child: const Text('Gallery'),
             ),
           ],
         ),
