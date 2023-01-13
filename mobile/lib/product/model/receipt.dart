@@ -1,7 +1,8 @@
 import 'dart:convert';
 
+import 'package:gallery_saver/files.dart';
 import 'package:mobile/product/model/receipt_item.dart';
-import 'package:mobile/core/utility/http_client.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobile/service/storage_service.dart';
 
 class Receipt {
@@ -60,14 +61,19 @@ class Receipt {
   }
 
   static Future<List<Receipt>> fetchReceipts() async {
-    String userId = (await StorageService.readSecureData('user'))!;
-    String token = (await StorageService.readSecureData('jwt'))!;
+    // String userId = (await StorageService.readSecureData('user'))!;
+
+    String userId = '639b97244b307b2646ba6548';
+    // String token = (await StorageService.readSecureData('jwt'))!;
+
+    // var response =
+    //     await HttpClient.get('receipt/$userId', headers: {'token': token});
 
     var response =
-        await HttpClient.get('receipt/$userId', headers: {'token': token});
+        await http.get(Uri.parse('http://10.0.2.2:3000/receipt/' + userId));
     print(response.statusCode);
     print(userId);
-    print(token);
+    // print(token);
 
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
