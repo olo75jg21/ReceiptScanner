@@ -205,9 +205,9 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(receiptItem.name.toString(),
-                    style: TextStyle(fontSize: 16.0)),
+                    style: const TextStyle(fontSize: 16.0)),
                 Text(receiptItem.priceInvidual.toString(),
-                    style: TextStyle(fontSize: 16.0))
+                    style: const TextStyle(fontSize: 16.0))
               ],
             ),
             const SizedBox(
@@ -231,10 +231,10 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
       margin: EdgeInsets.all(15.0),
       child: Column(
         children: <Widget>[
-          // accountItems("Trevello App", r"+ $ 4,946.00", "28-04-16", "credit",
-          //     oddColour: const Color(0xFFF7F7F9)),
-          for (ReceiptItem receiptItem in _receipt.receiptItems!)
-            accountItems(receiptItem, oddColour: const Color(0xFFF7F7F9)),
+          for (var receiptItem in _receipt.receiptItems!.asMap().entries)
+            accountItems(receiptItem.value,
+                oddColour:
+                    receiptItem.key % 2 == 0 ? Color(0xFFF7F7F9) : Colors.white)
         ],
       ),
     );
