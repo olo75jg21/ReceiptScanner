@@ -86,4 +86,16 @@ class Receipt {
       throw Exception('Failed to load users');
     }
   }
+
+  static Future<http.Response> deleteReceipt(String receiptId) async {
+    try {
+      final response = await http
+          .delete(Uri.parse('http://10.0.2.2:3000/receipt/${receiptId}'));
+      print(response.body);
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete');
+    }
+  }
 }

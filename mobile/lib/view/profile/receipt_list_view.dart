@@ -21,6 +21,9 @@ class _ReceiptListState extends State<ReceiptListView> {
     futureReceipts = Receipt.fetchReceipts();
   }
 
+  Text renderCreatedAtDate(DateTime date) =>
+      Text('${date.day}-${date.month}-${date.year}');
+
   @override
   Widget build(BuildContext context) {
     // add jwt check
@@ -57,21 +60,73 @@ class _ReceiptListState extends State<ReceiptListView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
-                        snapshot.data![index].shop.toString().toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            snapshot.data![index].shop.toString().toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          renderCreatedAtDate(DateTime.parse(
+                              snapshot.data![index].createdAt.toString()))
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(snapshot.data![index].createdAt.toString()),
-                      const SizedBox(height: 10),
-                      Text(
-                        "${snapshot.data![index].price}zl",
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      )
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${snapshot.data![index].price} zl",
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.all(16.0),
+                                        height: 60,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            IconButton(
+                                              icon: const Icon(Icons.cancel),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete),
+                                              color: Colors.red,
+                                              onPressed: () {
+                                                Receipt.deleteReceipt(snapshot
+                                                    .data![index].sId
+                                                    .toString());
+
+                                                Navigator.pop(context);
+
+                                                setState(() {
+                                                  futureReceipts =
+                                                      Receipt.fetchReceipts();
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              },
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red)
+                        ],
+                      ),
                     ],
                   ),
                 ),
