@@ -25,6 +25,8 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
     super.initState();
   }
 
+  void handleDeleteReceiptItem() {}
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -113,6 +115,16 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
                             receiptItem.deleteReceiptItem(
                                 _receipt.sId.toString(),
                                 receiptItem.sId.toString());
+
+                            Navigator.pop(context);
+
+                            setState(() {
+                              var receiptIndex = _receipt.receiptItems
+                                  ?.indexWhere((receipt) =>
+                                      receipt.sId == receiptItem.sId);
+
+                              _receipt.receiptItems?.removeAt(receiptIndex!);
+                            });
                           },
                         ),
                       ],

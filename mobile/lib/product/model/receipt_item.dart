@@ -41,7 +41,7 @@ class ReceiptItem {
     try {
       final response = await http.delete(Uri.parse(
           'http://10.0.2.2:3000/receipt/${receiptId}/item/${receiptItemId}'));
-      print(response);
+      print(response.body);
 
       return response;
     } catch (e) {
