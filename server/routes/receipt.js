@@ -1,19 +1,25 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const ReceiptController = require('../controllers/ReceiptController')
-const authenticate = require('../middleware/authenticate')
+const ReceiptController = require("../controllers/ReceiptController");
+const authenticate = require("../middleware/authenticate");
 
 // authenticate - temporary deleted
-router.get('/:userId', ReceiptController.show)
+router.get("/:userId", ReceiptController.show);
 
-router.post('/:userId', ReceiptController.store)
-router.post('/item/:receiptId', ReceiptController.storeItem)
+router.post("/:userId", ReceiptController.store);
+router.post("/item/:receiptId", ReceiptController.storeItem);
 
-router.patch('/:receiptId', ReceiptController.update)
-router.patch('/:receiptId/item/:itemId', ReceiptController.updateItem)
+router.patch("/:receiptId", ReceiptController.update);
+router.patch("/:receiptId/item/:itemId", ReceiptController.updateItem);
 
-router.delete('/:receiptId', ReceiptController.destroy)
-router.delete('/:receiptId/item/:itemId', ReceiptController.destroyItem)
+router.delete("/:receiptId", ReceiptController.destroy);
+router.delete("/:receiptId/item/:itemId", ReceiptController.destroyItem);
 
-module.exports = router
+router.get(
+  "/:userId/total/:month/:year",
+  authenticate,
+  ReceiptController.getMonthTotalSum
+);
+
+module.exports = router;

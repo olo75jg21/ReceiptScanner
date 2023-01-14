@@ -4,7 +4,9 @@ API jest hostowane na stronie render.com
 Aby użyć API należy użyć przedrostka https://receipt-scanner-api.onrender.com
 
 ## POST /register
+
 Rejstracja
+
 ```JSON
 {
     "email": "admin@test.pl",
@@ -13,22 +15,27 @@ Rejstracja
 ```
 
 ### Walidacja danych
-* email - musi mieć prawidłowy format adresu email np. test@gmail.com
-* password - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
+
+- email - musi mieć prawidłowy format adresu email np. test@gmail.com
+- password - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
 
 ### Odpowiedzi dotyczące walidacji
-Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w jednej odpowiedzi
-* <font color="red"> Status 400 </font> "Invalid email"
-* <font color="red"> Status 400 </font> "Password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
 
+Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w jednej odpowiedzi
+
+- <font color="red"> Status 400 </font> "Invalid email"
+- <font color="red"> Status 400 </font> "Password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
 
 ### Możliwe odpowiedzi
-* <font color="green"> Status 201 </font> "Account was created, email confirmation was sent" 
-* <font color="red"> Status 409 </font> "Email already exists"
-* <font color="red"> Status 500 </font> "Internal server error"<br/></br>
+
+- <font color="green"> Status 201 </font> "Account was created, email confirmation was sent"
+- <font color="red"> Status 409 </font> "Email already exists"
+- <font color="red"> Status 500 </font> "Internal server error"<br/></br>
 
 ## POST /login
-Logowanie 
+
+Logowanie
+
 ```JSON
 {
     "email": "admin@test.pl",
@@ -37,35 +44,46 @@ Logowanie
 ```
 
 ### Możliwe odpowiedzi
-* <font color="green">Status 200 </font> "Successfully logged in"
-* <font color="red"> Status 401 </font> "Invalid credentials"
-* <font color="red"> Status 500 </font> "Internal server error"
+
+- <font color="green">Status 200 </font> "Successfully logged in"
+- <font color="red"> Status 401 </font> "Invalid credentials"
+- <font color="red"> Status 500 </font> "Internal server error"
 
 ### Informacje, które należy przechować w aplikacji do dalszej pracy
-* token
-* id
 
-Token potrzebny będzie do autoryzacji pozostałych requestów, musi znajdować się w Headerze 
+- token
+- id
+
+Token potrzebny będzie do autoryzacji pozostałych requestów, musi znajdować się w Headerze
 
 Id użytkownika jest używane, aby dostać paragony<br/><br/>
 
 # GET /verify/{userId}/{uniqueString}
+
 Służy do potwierdzenia adresu email - przycisk w mailu "Confirm Account"
 
 ### Możliwe odpowiedzi
-##### Otwarcie strony "verified.html" z sukcesem weryfikacji maila
-* <font color="green">Status 200 </font>
-##### Przekierowanie do "verified.html" z błędem podczas weryfikacja maila
-* <font color="orange"> Status 302 </font> 
 
-# GET /verified 
+##### Otwarcie strony "verified.html" z sukcesem weryfikacji maila
+
+- <font color="green">Status 200 </font>
+
+##### Przekierowanie do "verified.html" z błędem podczas weryfikacja maila
+
+- <font color="orange"> Status 302 </font>
+
+# GET /verified
+
 Otwiera widok "verified.html" w przeglądarce
 
 ### Możliwa odpowiedz
+
 ##### Otwarcie strony "verified.html" z sukcesem weryfikacji maila
-* <font color="green">Status 200 </font><br/><br/>
+
+- <font color="green">Status 200 </font><br/><br/>
 
 # POST /sendPasswordReset
+
 ```JSON
 {
     "email": "admin@test.pl",
@@ -74,39 +92,52 @@ Otwiera widok "verified.html" w przeglądarce
 ```
 
 ### Walidacja danych
-* email - musi mieć prawidłowy format adresu email np. test@gmail.com
-* newPassword - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
 
+- email - musi mieć prawidłowy format adresu email np. test@gmail.com
+- newPassword - długość co najmniej osiem, co najmniej jedna mała i wielka litera oraz co najmniej jeden symbol i znak
 
 ### Odpowiedzi dotyczące walidacji
+
 Błędy przekazywane są w tablicy - mogą pojawić się obie informacje naraz w jednej odpowiedzi
-* <font color="red"> Status 400 </font> "Invalid email"
-* <font color="red"> Status 400 </font> "New password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
+
+- <font color="red"> Status 400 </font> "Invalid email"
+- <font color="red"> Status 400 </font> "New password is too weak - minimum length have to be 8 and contains at least one Lowercase, Uppercase, Number and Symbol"
 
 ### Możliwe odpowiedzi
-* <font color="green">Status 200 </font> "Password reset confirmation email was sent"
-* <font color="red"> Status 401 </font> "Email hasn't been verified yet. Check your inbox"
-* <font color="red"> Status 403 </font> "Wrong credentials"
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+
+- <font color="green">Status 200 </font> "Password reset confirmation email was sent"
+- <font color="red"> Status 401 </font> "Email hasn't been verified yet. Check your inbox"
+- <font color="red"> Status 403 </font> "Wrong credentials"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # GET resetPassword/{userId}/{resetString}
+
 Służy do potwierdzenia zmiany hasła - przycisk w mailu "Reset Password"
 
 ### Możliwe odpowiedzi
+
 ##### Otwarcie strony "changedPassword.html" z sukcesem zmiany hasła
-* <font color="green">Status 200 </font>
+
+- <font color="green">Status 200 </font>
+
 ##### Przekierowanie do "verified.html" z błędem podczas zmiany hasła
-* <font color="orange"> Status 302 </font> 
+
+- <font color="orange"> Status 302 </font>
 
 # GET reset
+
 Otwiera widok "changedPassword.html" w przeglądarce
 
 ### Możliwa odpowiedz
+
 ##### Otwarcie strony "changedPassword.html" z sukcesem zmiany hasła
-* <font color="green">Status 200 </font><br/><br/>
+
+- <font color="green">Status 200 </font><br/><br/>
 
 # POST /receipt/{idUzytkownika}
+
 Dodanie paragonu
+
 ```JSON
 {
     "shop": "zabka",
@@ -137,13 +168,15 @@ Dodanie paragonu
 }
 ```
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 201 </font> "Receipt added"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found"
-* <font color="red"> Status 500 </font> "Internal server error" <br/><br/>
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 201 </font> "Receipt added"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error" <br/><br/>
 
 # GET /receipt/{idUzytkownika}?page={pageNumber}&limit={amountOfRecordsPerPage}
+
 ```JSON
 {
     "response": {
@@ -233,8 +266,11 @@ Dodanie paragonu
     }
 }
 ```
+
 ## GET /receipt/{idUzytkownika}
+
 Pobranie wszystkich paragonów danego użytkownika
+
 ```JSON
 {
     "response": {
@@ -541,34 +577,43 @@ Pobranie wszystkich paragonów danego użytkownika
     }
 }
 ```
-ukryte pola "__v", "createdAt" oraz "updatedAt"
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> Zwróci plik Json jak w przykładach powyżej
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "You don't have any receipts yet"
-* <font color="red"> Status 404 </font> "Resource was not found"
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+ukryte pola "\_\_v", "createdAt" oraz "updatedAt"
+
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font> Zwróci plik Json jak w przykładach powyżej
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "You don't have any receipts yet"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # DELETE /receipt/{idParagonu}
- Usuniecie paragonu
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> "Receipt was deleted successfully"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found"
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+
+Usuniecie paragonu
+
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font> "Receipt was deleted successfully"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # DELETE /receipt/{idParagonu}/item/{idPrzedmiotu}
+
 Usuniecie przedmiotu z paragonu
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> "Item was removed from receipt successfully"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found"
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font> "Item was removed from receipt successfully"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # POST /receipt/item/{idParagonu}
+
 Dodanie przedmiotu do paragonu
+
 ```JSON
 {
     "name": "batonik",
@@ -579,14 +624,17 @@ Dodanie przedmiotu do paragonu
 }
 ```
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> "Item was added to receipt successfully"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found" 
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font> "Item was added to receipt successfully"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # PATCH /receipt/{idParagonu}
+
 Aktualizacja paragonu
+
 ```JSON
 {
    "shop": "zabka",
@@ -595,14 +643,17 @@ Aktualizacja paragonu
 }
 ```
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> "Receipt informations was updated successfully"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found" 
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font> "Receipt informations was updated successfully"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
 # PATCH /receipt/{idParagonu}/item/{idPrzedmiotu}
+
 Aktualizacja przedmiotu w danym paraganie
+
 ```JSON
 {
    "name": "baton",
@@ -613,11 +664,26 @@ Aktualizacja przedmiotu w danym paraganie
 }
 ```
 
-### Możliwe odpowiedzi 
-* <font color="green"> Status 200 </font> "Item was updated successfully"
-* <font color="red"> Status 401 </font> "Authentication failed"
-* <font color="red"> Status 404 </font> "Resource was not found"
-* <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
+### Możliwe odpowiedzi
 
+- <font color="green"> Status 200 </font> "Item was updated successfully"
+- <font color="red"> Status 401 </font> "Authentication failed"
+- <font color="red"> Status 404 </font> "Resource was not found"
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
 
+# GET /receipt/{idUzytkownika}/total/{month}/{year}
 
+Zwraca wydaną sumę z paragonów z konkretnego miesiąca i roku
+
+```JSON
+{
+    "totalSum": 600,
+    "month": "12",
+    "year": "2022"
+}
+```
+
+### Możliwe odpowiedzi
+
+- <font color="green"> Status 200 </font>
+- <font color="red"> Status 500 </font> "Internal server error"<br/><br/>
