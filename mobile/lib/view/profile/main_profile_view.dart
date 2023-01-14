@@ -48,7 +48,7 @@ class _MainProfileState extends State<MainProfileView> {
               ),
               Text(
                 'Welcome',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
               ),
               IconButton(
                 onPressed: _redirectToCamera,

@@ -66,7 +66,7 @@ class _ReceiptListState extends State<ReceiptListView> {
                             Row(
                               children: [
                                 const Icon(
-                                  Icons.shopping_cart,
+                                  Icons.shopping_cart_outlined,
                                   size: 35,
                                 ),
                                 const SizedBox(width: 5),
@@ -98,6 +98,8 @@ class _ReceiptListState extends State<ReceiptListView> {
                                           context: context,
                                           builder: (context) {
                                             return Container(
+                                              color: const Color.fromARGB(
+                                                  255, 212, 212, 212),
                                               alignment: Alignment.center,
                                               padding:
                                                   const EdgeInsets.all(16.0),
@@ -108,15 +110,19 @@ class _ReceiptListState extends State<ReceiptListView> {
                                                 children: <Widget>[
                                                   IconButton(
                                                     icon: const Icon(
-                                                        Icons.cancel),
+                                                      Icons.cancel_outlined,
+                                                      size: 30,
+                                                    ),
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                     },
                                                   ),
                                                   IconButton(
                                                     icon: const Icon(
-                                                        Icons.delete),
-                                                    color: Colors.red,
+                                                      Icons
+                                                          .delete_forever_outlined,
+                                                      size: 30,
+                                                    ),
                                                     onPressed: () {
                                                       Receipt.deleteReceipt(
                                                           snapshot
@@ -137,7 +143,7 @@ class _ReceiptListState extends State<ReceiptListView> {
                                           });
                                     },
                                     icon: const Icon(
-                                      Icons.delete,
+                                      Icons.delete_outline,
                                       size: 30,
                                     ),
                                   ),

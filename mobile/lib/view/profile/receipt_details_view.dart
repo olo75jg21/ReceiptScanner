@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:mobile/product/model/receipt.dart';
 import 'package:mobile/product/model/receipt_item.dart';
-// import 'package:path/path.dart';
 import '../../core/constant/app_color.dart';
 
 class ReceiptDetailView extends StatefulWidget {
@@ -31,62 +30,30 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 234, 234),
       appBar: AppBar(
-        title: const Text('Details'),
-        backgroundColor: AppColors.loginColor,
+        iconTheme: const IconThemeData(
+            color: Color.fromARGB(255, 83, 83, 83), size: 30),
+        elevation: 0,
+        title: appBarTitle(),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-          child: Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  topArea(),
-                  displayReceiptItemsList(),
-                ],
-              ))),
+          child: Column(
+        children: <Widget>[
+          displayReceiptItemsList(),
+        ],
+      )),
     ));
   }
 
-  Card topArea() => Card(
-        margin: const EdgeInsets.all(10.0),
-        child: Container(
-            color: const Color.fromARGB(255, 235, 232, 232),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 10.0, bottom: 15.0),
-                      child: Text(_receipt.shop.toString(),
-                          style: const TextStyle(
-                              fontSize: 26.0, fontWeight: FontWeight.w400)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(
-                          top: 10.0, bottom: 15.0, right: 10.0),
-                      child: Text(
-                          '${_receiptCreatedAt.day.toString()}-${_receiptCreatedAt.month.toString()}-${_receiptCreatedAt.year.toString()}',
-                          style: const TextStyle(fontSize: 17.0)),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(1.0),
-                      margin: const EdgeInsets.only(left: 10.0),
-                      child: Text('Total: ${_receipt.price} zl',
-                          style: const TextStyle(fontSize: 22.0)),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 12.0),
-              ],
-            )),
-      );
+  Row appBarTitle() => Row(children: [
+        Text('${_receipt.shop} - ${_receipt.price} PLN'.toUpperCase(),
+            style: const TextStyle(
+                fontSize: 22,
+                color: Color.fromARGB(255, 83, 83, 83),
+                fontWeight: FontWeight.w700))
+      ]);
 
   GestureDetector receiptItems(ReceiptItem receiptItem,
           {Color oddColour = Colors.white}) =>
@@ -97,20 +64,24 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
                 builder: (context) {
                   return Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(16.0),
+                    color: const Color.fromARGB(255, 212, 212, 212),
+                    padding: const EdgeInsets.all(16.0),
                     height: 60,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         IconButton(
-                          icon: const Icon(Icons.cancel),
+                          icon: const Icon(Icons.cancel_outlined),
+                          iconSize: 30,
                           onPressed: () {
                             Navigator.pop(context);
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
+                          icon: const Icon(
+                            Icons.delete_outline,
+                          ),
+                          iconSize: 30,
                           onPressed: () {
                             receiptItem.deleteReceiptItem(
                                 _receipt.sId.toString(),
@@ -133,7 +104,11 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
                 });
           },
           child: Container(
-            decoration: BoxDecoration(color: oddColour),
+            margin: const EdgeInsets.only(bottom: 15),
+            decoration: BoxDecoration(
+                color: oddColour,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(10.0)),
             padding: const EdgeInsets.only(
                 top: 20.0, bottom: 20.0, left: 5.0, right: 5.0),
             child: Column(
@@ -143,11 +118,11 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
                   children: <Widget>[
                     Text(receiptItem.name.toString(),
                         style: const TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.w500)),
+                            fontSize: 22.0, fontWeight: FontWeight.w900)),
                     Text(
-                        "Total:  ${receiptItem.priceInvidual! * receiptItem.amount!} zl",
+                        "Total:  ${receiptItem.priceInvidual! * receiptItem.amount!} PLN",
                         style: const TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.w500))
+                            fontSize: 19.0, fontWeight: FontWeight.w900))
                   ],
                 ),
                 const SizedBox(
@@ -157,9 +132,11 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('${receiptItem.amount} ${receiptItem.unit}',
-                        style: const TextStyle(fontSize: 14.0)),
-                    Text('${receiptItem.priceInvidual} zl/${receiptItem.unit}',
-                        style: const TextStyle(fontSize: 14.0))
+                        style: const TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.w900)),
+                    Text('${receiptItem.priceInvidual} PLN/${receiptItem.unit}',
+                        style: const TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.w900))
                   ],
                 ),
               ],
@@ -173,9 +150,7 @@ class _ReceiptDetailViewState extends State<ReceiptDetailView> {
         children: <Widget>[
           for (var receiptItem in _receipt.receiptItems!.asMap().entries)
             receiptItems(receiptItem.value,
-                oddColour: receiptItem.key % 2 == 0
-                    ? const Color(0xFFF7F7F9)
-                    : Colors.white)
+                oddColour: const Color.fromARGB(255, 215, 222, 224))
         ],
       ),
     );
