@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+
 class ReceiptItem {
   String? name;
   String? unit;
@@ -32,5 +34,18 @@ class ReceiptItem {
     data['category'] = category;
     data['_id'] = sId;
     return data;
+  }
+
+  Future<http.Response> deleteReceiptItem(
+      String receiptId, String receiptItemId) async {
+    try {
+      final response = await http.delete(Uri.parse(
+          'http://10.0.2.2:3000/receipt/${receiptId}/item/${receiptItemId}'));
+      print(response.body);
+
+      return response;
+    } catch (e) {
+      throw Exception('Failed to delete');
+    }
   }
 }

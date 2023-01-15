@@ -29,8 +29,11 @@ class MyApp extends StatelessWidget {
     //     body: const MyCustomForm(),
     //   ),
     // );
-    return const MaterialApp(
+    return MaterialApp(
       title: appTitle,
+      theme: ThemeData(
+          primaryColor: const Color.fromRGBO(58, 66, 86, 1.0),
+          fontFamily: 'Raleway'),
       debugShowCheckedModeBanner: false,
       // home: Scaffold(
       //   appBar: AppBar(
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
       //   ),
       //   body: LoginForm(),
       // ),
-      home: MainProfileView(),
+      home: const MainProfileView(),
     );
   }
 }

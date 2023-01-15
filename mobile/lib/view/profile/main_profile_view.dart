@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/view/profile/camera/gallery_view.dart';
@@ -15,11 +17,6 @@ class MainProfileView extends StatefulWidget {
 }
 
 class _MainProfileState extends State<MainProfileView> {
-  void _redirectToReceiptList() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const ReceiptListView()));
-  }
-
   void _redirectToGallery() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const GalleryView()));
@@ -37,25 +34,34 @@ class _MainProfileState extends State<MainProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: _redirectToReceiptList,
-              child: const Text('Receipts'),
-            ),
-            TextButton(
-              onPressed: _redirectToCamera,
-              child: const Text('Camera'),
-            ),
-            TextButton(
-              onPressed: _redirectToGallery,
-              child: const Text('Gallery'),
-            ),
-          ],
+        body: Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: _redirectToGallery,
+                icon: Icon(Icons.browse_gallery),
+                iconSize: 30,
+              ),
+              Text(
+                'Welcome',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+              ),
+              IconButton(
+                onPressed: _redirectToCamera,
+                icon: Icon(Icons.camera_alt),
+                iconSize: 30,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+        Expanded(
+          child: ReceiptListView(),
+        )
+      ],
+    ));
   }
 }
