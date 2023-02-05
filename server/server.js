@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const AuthRoute = require('./routes/auth')
 const ReceiptRoute = require('./routes/receipt')
 
-const url = `mongodb+srv://receiptScanner:otmQO5YqE2OhQsh7@cluster0.w1oqfry.mongodb.net/?retryWrites=true&w=majority`
+const url = ``
 
 const connectionParams={
     useNewUrlParser: true,
